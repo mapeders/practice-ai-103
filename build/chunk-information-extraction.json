@@ -1,0 +1,929 @@
+[
+  {
+    "id": 81,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You are building a RAG grounding pipeline on Azure AI Search. Your index contains both a searchable text field and a vector field. You want a single request that runs full-text search and vector search in parallel and returns one unified result set. Which two query parameters must the request include?",
+    "options": [
+      { "id": "A", "text": "search and semanticConfiguration" },
+      { "id": "B", "text": "searchFields and filter" },
+      { "id": "C", "text": "search and vectorQueries" },
+      { "id": "D", "text": "queryType=full and vectorFilterMode" }
+    ],
+    "correct": ["C"],
+    "explanation": "Hybrid search in Azure AI Search is a single query request that includes both the search (full-text) and vectorQueries parameters. The full-text and vector queries run in parallel and the results are merged with Reciprocal Rank Fusion. semanticConfiguration only enables the optional semantic reranker on top of a query and does not by itself add a vector query, and vectorFilterMode only controls whether filters run before or after vector execution.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Hybrid search",
+      "unit": "Hybrid search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"
+    }
+  },
+  {
+    "id": 82,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A company runs hybrid queries against an Azure AI Search index. A developer asks how the service combines the BM25-ranked text results and the HNSW-ranked vector results into one list. Which algorithm does Azure AI Search use to merge the two result sets?",
+    "options": [
+      { "id": "A", "text": "TF/IDF weighted averaging" },
+      { "id": "B", "text": "Reciprocal Rank Fusion (RRF)" },
+      { "id": "C", "text": "Exhaustive K Nearest Neighbors (eKNN)" },
+      { "id": "D", "text": "Cosine similarity thresholding" }
+    ],
+    "correct": ["B"],
+    "explanation": "Hybrid search combines results from full-text and vector queries, which use different ranking functions (BM25 for text, HNSW or eKNN for vectors), and a Reciprocal Rank Fusion (RRF) algorithm merges them into a single ranked result set. eKNN is a vector ranking algorithm, not a fusion method, and TF/IDF is the basis of text scoring rather than the merging step.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Hybrid search",
+      "unit": "Hybrid search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"
+    }
+  },
+  {
+    "id": 83,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You enable semantic ranker on an Azure AI Search index used for grounding a chat application. A hybrid query returns 200 matching documents. How many of those results are passed to the semantic ranker for reranking?",
+    "options": [
+      { "id": "A", "text": "All 200 results" },
+      { "id": "B", "text": "Only the top 50 results" },
+      { "id": "C", "text": "Only the top 10 results" },
+      { "id": "D", "text": "Only results whose @search.score is above 0.5" }
+    ],
+    "correct": ["B"],
+    "explanation": "Semantic ranker reranks the existing result set consisting of the top 50 results as scored by BM25 or RRF; even if more than 50 results match, only the top 50 progress to semantic ranking. It cannot rerun the query over the entire corpus, so it never reranks all 200 matches. There is no score-based cut-off for selecting the reranking inputs.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Semantic ranking",
+      "unit": "Semantic ranking overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/semantic-search-overview"
+    }
+  },
+  {
+    "id": 84,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You are building a knowledge mining solution with an Azure AI Search indexer over a blob container. Your skillset includes an OCR skill whose output is stored at /document/normalized_images/*/text in the enrichment tree. The skill output never appears in the index. What must you add?",
+    "options": [
+      { "id": "A", "text": "An implicit field mapping, because source fields are automatically mapped to index fields with the same name" },
+      { "id": "B", "text": "A facetable attribute on the target index field" },
+      { "id": "C", "text": "An explicit output field mapping from the skill output's location in the enrichment tree to the target index field" },
+      { "id": "D", "text": "A Shaper skill, because OCR output can only be stored in a knowledge store" }
+    ],
+    "correct": ["C"],
+    "explanation": "Fields extracted directly from source data are mapped to index fields implicitly (same name) or explicitly, but output fields from skills in the skillset must be explicitly mapped from their hierarchical location in the enriched document to the target index field. Implicit mapping only applies to source fields, not to skill outputs, so option A does not work. A Shaper skill and knowledge store relate to projections, not to populating index fields.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create a knowledge mining solution with Azure AI Search",
+      "unit": "Extract data with an indexer",
+      "url": "https://learn.microsoft.com/en-us/training/modules/ai-knowldge-mining/3-index"
+    }
+  },
+  {
+    "id": 85,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You add an OCR skill (#Microsoft.Skills.Vision.OcrSkill) to an Azure AI Search skillset to extract text from images embedded in PDF files. The indexer runs but the skill receives no input. Which indexer configuration setting must you set?",
+    "options": [
+      { "id": "A", "text": "parameters.configuration.dataToExtract set to allMetadata" },
+      { "id": "B", "text": "parameters.configuration.parsingMode set to json" },
+      { "id": "C", "text": "parameters.configuration.imageAction set to generateNormalizedImages" },
+      { "id": "D", "text": "parameters.configuration.allowSkillsetToReadFileData set to true" }
+    ],
+    "correct": ["C"],
+    "explanation": "The OCR skill's image input only works with the /document/normalized_images field, which the blob indexer produces when imageAction is set to a value other than none; the documented value is generateNormalizedImages. allowSkillsetToReadFileData creates the /document/file_data path used by the Content Understanding and Document Layout skills, not normalized images. dataToExtract and parsingMode do not generate image data.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "OCR skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr"
+    }
+  },
+  {
+    "id": 86,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "Your Azure AI Search skillset runs an OCR skill over images embedded in Word documents. You want a single merged_text field that contains the original document text with the OCR text from each image inserted at the correct location. Which built-in skill should you add after the OCR skill?",
+    "options": [
+      { "id": "A", "text": "#Microsoft.Skills.Text.SplitSkill" },
+      { "id": "B", "text": "#Microsoft.Skills.Text.MergeSkill" },
+      { "id": "C", "text": "#Microsoft.Skills.Util.ShaperSkill" },
+      { "id": "D", "text": "#Microsoft.Skills.Util.ConditionalSkill" }
+    ],
+    "correct": ["B"],
+    "explanation": "The Text Merge skill (#Microsoft.Skills.Text.MergeSkill) takes the document content as text, the OCR output (/document/normalized_images/*/text) as itemsToInsert, and /document/normalized_images/*/contentOffset as offsets, and produces mergedText that includes each image's text inserted at the right location. The Split skill chunks text rather than combining it, and the Shaper skill builds complex structures for projections rather than merging text streams.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "OCR skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr"
+    }
+  },
+  {
+    "id": 87,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You implement a custom skill as an Azure Function and reference it from an Azure AI Search skillset using #Microsoft.Skills.Custom.WebApiSkill. The indexer reports that no enrichments were performed even though the function returns HTTP 200 with a values array containing recordId and data for each record. What is the most likely cause?",
+    "options": [
+      { "id": "A", "text": "The function used POST instead of PUT, which is not allowed for custom skills" },
+      { "id": "B", "text": "The values array was returned in a different order from the request" },
+      { "id": "C", "text": "The response omitted a context property for each record" },
+      { "id": "D", "text": "Each record is missing the required errors and warnings properties, or the response Content-Type is not application/json" }
+    ],
+    "correct": ["D"],
+    "explanation": "The custom Web API skill contract requires each object in the response values array to have recordId, data, errors, and warnings properties; errors and warnings are required although they can be null, and the response must be application/json or it is treated as invalid and no enrichments are performed. Ordering of the values array does not matter because recordId is used for correlation, and both PUT and POST are allowed httpMethod values.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "Custom Web API skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-web-api"
+    }
+  },
+  {
+    "id": 88,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A custom Web API skill in your Azure AI Search skillset calls an Azure Function that forwards documents to an Azure Document Intelligence model. Calls regularly take about two minutes and the indexer records timeouts. Which skill parameter should you set, and to what value?",
+    "options": [
+      { "id": "A", "text": "timeout set to PT120S" },
+      { "id": "B", "text": "timeout set to 120000" },
+      { "id": "C", "text": "degreeOfParallelism set to 120" },
+      { "id": "D", "text": "batchSize set to 120" }
+    ],
+    "correct": ["A"],
+    "explanation": "The custom Web API skill timeout parameter is formatted as an XSD dayTimeDuration value such as PT60S for 60 seconds; the default is 30 seconds and the maximum is 230 seconds, so PT120S is valid. A plain millisecond integer is not an accepted format. degreeOfParallelism controls parallel calls (1 to 10, default 5) and batchSize controls records per call (default 1000); neither extends the HTTP timeout.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "Custom Web API skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-web-api"
+    }
+  },
+  {
+    "id": 89,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You add the Azure Content Understanding skill (#Microsoft.Skills.Util.ContentUnderstandingSkill) to a skillset whose indexer reads PDFs from Azure Blob Storage. The skill's file_data input is sourced from /document/file_data, but the indexer reports that the path does not exist. What should you do?",
+    "options": [
+      { "id": "A", "text": "Set imageAction to generateNormalizedImages in the indexer configuration" },
+      { "id": "B", "text": "Set allowSkillsetToReadFileData to true in the indexer definition" },
+      { "id": "C", "text": "Add a Text Split skill before the Content Understanding skill" },
+      { "id": "D", "text": "Change the skill context to /document/normalized_images/*" }
+    ],
+    "correct": ["B"],
+    "explanation": "The file_data input is a file reference object; setting allowSkillsetToReadFileData to true on the indexer creates the /document/file_data path representing the original file downloaded from the blob data source. imageAction produces normalized images for the OCR and image analysis skills, not file data. A Text Split skill is unnecessary because the Content Understanding skill performs chunking itself.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "Azure Content Understanding skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-content-understanding"
+    }
+  },
+  {
+    "id": 90,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You configure integrated vectorization in Azure AI Search. The skillset uses the AzureOpenAIEmbedding skill with a text-embedding-3-large deployment to embed chunks during indexing. You want text queries to be vectorized automatically at query time. Which vectorizer must you define in the index?",
+    "options": [
+      { "id": "A", "text": "A Custom Web API vectorizer pointing to the search service endpoint" },
+      { "id": "B", "text": "An Azure Vision vectorizer, because it supports both text and images" },
+      { "id": "C", "text": "No vectorizer; the embedding skill is reused automatically at query time" },
+      { "id": "D", "text": "An Azure OpenAI vectorizer configured for the same text-embedding-3-large deployment" }
+    ],
+    "correct": ["D"],
+    "explanation": "For query-time vectorization you define a vectorizer in the index schema, assign it to a vector profile and vector field, and it must match the embedding model used to encode the content; the AzureOpenAIEmbedding skill pairs with the Azure OpenAI vectorizer. Skills run only during indexing, so option C is wrong. The Azure Vision vectorizer pairs with the Azure Vision multimodal embeddings skill, and the Custom Web API vectorizer pairs with a custom embedding skill.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Vector search",
+      "unit": "Integrated vectorization overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-integrated-vectorization"
+    }
+  },
+  {
+    "id": 91,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A company ingests large PDF manuals into Azure AI Search for a RAG application. They want the indexer pipeline to split documents into chunks and generate embeddings without writing an external pipeline. Which pair of built-in skills should the skillset include?",
+    "options": [
+      { "id": "A", "text": "Text Split skill and AzureOpenAIEmbedding skill" },
+      { "id": "B", "text": "Key Phrase Extraction skill and Entity Recognition skill" },
+      { "id": "C", "text": "OCR skill and Text Merge skill" },
+      { "id": "D", "text": "Shaper skill and Language Detection skill" }
+    ],
+    "correct": ["A"],
+    "explanation": "Integrated vectorization during indexing depends on a skillset configured with a chunking strategy (the Text Split skill, or alternatively the Azure Content Understanding skill) and an embedding skill such as the AzureOpenAIEmbedding skill attached to text-embedding-ada-002, text-embedding-3-small, or text-embedding-3-large. OCR and Text Merge handle image text, not chunking and vectors, and the key phrase and entity skills produce enrichments rather than embeddings.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Vector search",
+      "unit": "Integrated vectorization overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-integrated-vectorization"
+    }
+  },
+  {
+    "id": 92,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You run vector queries against an Azure AI Search index and want to restrict results to documents whose category is 'contracts'. A developer tries to mark the vector field itself as filterable and gets an error. What is the correct approach?",
+    "options": [
+      { "id": "A", "text": "Store the category as part of the embedding so the nearest-neighbor search excludes other categories" },
+      { "id": "B", "text": "Add a filterable text or numeric field for category and include a filter expression alongside the vector query" },
+      { "id": "C", "text": "Create a separate index per category and query them with exhaustive=true" },
+      { "id": "D", "text": "Use a scoring profile to boost the category field" }
+    ],
+    "correct": ["B"],
+    "explanation": "Filtered vector search lets a request include a vector query and a filter expression; filters apply to text and numeric fields, and although a vector field is not filterable you can set up a filterable text or numeric field, which the engine can apply before or after the vector query. Encoding the category into the embedding does not provide exact exclusion, and a scoring profile boosts rather than filters.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Vector search",
+      "unit": "Vector search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview"
+    }
+  },
+  {
+    "id": 93,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You have an Azure AI Search index with vector fields and a vectorizer. You want to expose it to an agent built with Foundry Agent Service so the agent can retrieve grounding data. According to the vector search documentation, which objects should you create in Azure AI Search?",
+    "options": [
+      { "id": "A", "text": "A synonym map and a scoring profile that the agent references by name" },
+      { "id": "B", "text": "A data source and an indexer that push results into the agent's thread" },
+      { "id": "C", "text": "An indexed knowledge source pointing to the index, parented to a knowledge base that is connected to Foundry Agent Service" },
+      { "id": "D", "text": "A semantic configuration that the agent calls through the Search Documents REST API" }
+    ],
+    "correct": ["C"],
+    "explanation": "In Azure AI Search you create an indexed knowledge source that points to a search index containing vector fields and a vectorizer, parent the knowledge source to a knowledge base, and connect the knowledge base to Foundry Agent Service, which gives agents vector search results for knowledge retrieval. A data source and indexer are ingestion objects, not an agent integration, and a semantic configuration alone does not connect an agent.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Vector search",
+      "unit": "Vector search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview"
+    }
+  },
+  {
+    "id": 94,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "Your Azure AI Search indexer uses built-in skills such as OCR and key phrase extraction. Indexing works for a small test set but fails once you index several hundred documents. The indexer is not attached to any external Foundry Tools resource. What is the cause?",
+    "options": [
+      { "id": "A", "text": "Built-in skills can only run on documents smaller than 1 MB" },
+      { "id": "B", "text": "The restricted built-in resource is limited to indexing 20 or fewer documents; you must attach a Foundry Tools resource in the same region as the search service" },
+      { "id": "C", "text": "Built-in skills require the indexer to run on a schedule rather than on demand" },
+      { "id": "D", "text": "The skillset must be converted to custom skills once it exceeds 20 documents" }
+    ],
+    "correct": ["B"],
+    "explanation": "To use built-in skills the indexer must have access to a Foundry Tools resource; you can use the restricted resource included with Azure AI Search, which is limited to indexing 20 or fewer documents, or attach a Foundry Tools resource in your subscription, which must be in the same region as the Azure AI Search resource. There is no requirement to convert to custom skills or to schedule the indexer.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create a knowledge mining solution with Azure AI Search",
+      "unit": "Enrich extracted data with AI skills",
+      "url": "https://learn.microsoft.com/en-us/training/modules/ai-knowldge-mining/4-ai-skills"
+    }
+  },
+  {
+    "id": 95,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You need to extract tables, selection marks (checkboxes), and document structure from scanned forms using Azure Document Intelligence, and you also want key-value pairs. The read model returns only text and language. Which model should you use?",
+    "options": [
+      { "id": "A", "text": "The custom classifier model" },
+      { "id": "B", "text": "The general document model" },
+      { "id": "C", "text": "The prebuilt receipt model" },
+      { "id": "D", "text": "The layout model with the optional keyValuePairs feature" }
+    ],
+    "correct": ["D"],
+    "explanation": "The layout model extends the read model's text extraction with detection of selection marks, tables, and document structure, and supports an optional keyValuePairs feature to extract key-value pairs. The general document model was deprecated in the 2023-10-31-preview release and its key-value functionality was incorporated into the layout model. A custom classifier identifies document types rather than extracting structure.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Use prebuilt models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/4-use-prebuilt-models"
+    }
+  },
+  {
+    "id": 96,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A logistics company receives delivery notes from hundreds of suppliers. The notes contain the same fields but the layout varies significantly from supplier to supplier. They want to train an Azure Document Intelligence custom model. Which model type should they choose?",
+    "options": [
+      { "id": "A", "text": "Custom template model, because it supports more than 100 languages" },
+      { "id": "B", "text": "Custom neural model, because it combines layout and language features to handle varying layouts" },
+      { "id": "C", "text": "Custom classifier model, because it routes each document to the right supplier" },
+      { "id": "D", "text": "Prebuilt invoice model, because delivery notes are financial documents" }
+    ],
+    "correct": ["B"],
+    "explanation": "Custom neural models use deep learning fine-tuned on labeled data and combine layout and language features to extract fields from structured, semi-structured, and unstructured documents, delivering higher accuracy when the layout varies between instances. Custom template models rely on a consistent visual template and their accuracy decreases when layout varies. A classifier only identifies document type and does not extract fields.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Train and use custom models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/5-train-custom-models"
+    }
+  },
+  {
+    "id": 97,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You have trained three Azure Document Intelligence custom models, one for each of three application form types. Client applications must submit any of the three forms to a single model ID and receive the right extraction results without classifying the form first. What should you create?",
+    "options": [
+      { "id": "A", "text": "A custom template model trained on all three form types together" },
+      { "id": "B", "text": "A Document Intelligence Studio project that shares one storage container" },
+      { "id": "C", "text": "A composed model that combines the three custom models" },
+      { "id": "D", "text": "A prebuilt-document analyzer in Azure Content Understanding" }
+    ],
+    "correct": ["C"],
+    "explanation": "You can combine multiple custom models into a single composed model; when a document is submitted to it, Document Intelligence classifies the document to determine the most appropriate component model and returns that model's extraction results. Retraining a single template model on mixed layouts undermines the template approach, and a Studio project is a labeling workspace rather than a routable model.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Train and use custom models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/5-train-custom-models"
+    }
+  },
+  {
+    "id": 98,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You are writing a Python application that analyzes a form hosted at a public URL using a custom Azure Document Intelligence model. Which call correctly starts the analysis?",
+    "options": [
+      { "id": "A", "text": "client.begin_analyze_document(model_id, AnalyzeDocumentRequest(url_source=form_url))" },
+      { "id": "B", "text": "client.analyze_document(model_id, body={\"url\": form_url}, wait=True)" },
+      { "id": "C", "text": "client.begin_analyze(analyzer_id=model_id, inputs=[AnalysisInput(url=form_url)])" },
+      { "id": "D", "text": "client.begin_build_document_model(model_id, form_url)" }
+    ],
+    "correct": ["A"],
+    "explanation": "The Document Intelligence Python SDK uses DocumentIntelligenceClient.begin_analyze_document(model_id, AnalyzeDocumentRequest(url_source=formUrl)) and then task.result() to obtain the analyzeResult. begin_analyze with AnalysisInput belongs to the Azure Content Understanding SDK (ContentUnderstandingClient), not Document Intelligence. Build model operations train a model rather than analyze a document.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Train and use custom models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/5-train-custom-models"
+    }
+  },
+  {
+    "id": 99,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You are creating a custom Azure Content Understanding analyzer with the REST API. Which HTTP request creates the analyzer named invoice_analyzer?",
+    "options": [
+      { "id": "A", "text": "POST {endpoint}/contentunderstanding/analyzers/invoice_analyzer:analyze?api-version=2025-11-01" },
+      { "id": "B", "text": "POST {endpoint}/contentunderstanding/analyzers?api-version=2025-11-01 with the name in the body" },
+      { "id": "C", "text": "PUT {endpoint}/contentunderstanding/analyzers/invoice_analyzer?api-version=2025-11-01 with the JSON definition in the body" },
+      { "id": "D", "text": "PATCH {endpoint}/contentunderstanding/analyzerResults/invoice_analyzer?api-version=2025-11-01" }
+    ],
+    "correct": ["C"],
+    "explanation": "An analyzer is created by submitting its JSON schema definition as a PUT request to {endpoint}/contentunderstanding/analyzers/{analyzer_name}?api-version=2025-11-01 with the API key in the Ocp-Apim-Subscription-Key header; the response includes an Operation-Location header to poll for completion. The :analyze POST path submits content to an existing analyzer, and analyzerResults is the GET endpoint for retrieving analysis results.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Create a Content Understanding analyzer",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/03-create-analyzer"
+    }
+  },
+  {
+    "id": 100,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A client application submits a scanned PDF to an existing Azure Content Understanding analyzer. The file is stored on a local disk and is not accessible from the internet. Which operation should the application call?",
+    "options": [
+      { "id": "A", "text": "The analyzeBinary operation, sending the file bytes directly" },
+      { "id": "B", "text": "The analyze operation with an inputs array containing a file:// url" },
+      { "id": "C", "text": "The analyzerResults operation with the file as a multipart attachment" },
+      { "id": "D", "text": "The analyze operation with the base64 content in the sasToken property" }
+    ],
+    "correct": ["A"],
+    "explanation": "The analyze operation accepts a JSON body with an inputs array whose items specify a url for a file hosted in an internet-accessible location; to submit binary file data directly (for example a .pdf, .png, .mp3 or .mp4 file) you use the analyzeBinary operation instead. analyzerResults is the GET endpoint for polling results, not for submitting content.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create a multimodal analysis solution with Azure Content Understanding",
+      "unit": "Use the Content Understanding API",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai/04-use-api"
+    }
+  },
+  {
+    "id": 101,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "Your application sends a POST request to {endpoint}/contentunderstanding/analyzers/{analyzer}:analyze?api-version=2025-11-01. The response body is {\"id\": \"1234abcd-...\", \"status\": \"NotStarted\"}. How does the application obtain the extracted fields?",
+    "options": [
+      { "id": "A", "text": "Resend the same POST request until the body contains a result object" },
+      { "id": "B", "text": "Send GET requests to {endpoint}/contentunderstanding/analyzerResults/{id}?api-version=2025-11-01 until status is Succeeded, then read result.contents" },
+      { "id": "C", "text": "Send a GET request to {endpoint}/contentunderstanding/analyzers/{analyzer}?api-version=2025-11-01 to read the fields" },
+      { "id": "D", "text": "Wait for a webhook callback from the Operation-Location URL" }
+    ],
+    "correct": ["B"],
+    "explanation": "Analysis is asynchronous: the analyze request returns an operation ID (also in the Operation-Id and Operation-Location headers), and the client polls the analyzerResults endpoint with a GET request until the status is no longer Running; when it is Succeeded the JSON payload contains result.contents with the extracted fields. Getting the analyzer definition returns the schema, not the results, and resubmitting the POST starts a new operation.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Analyze content",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/04-analyze"
+    }
+  },
+  {
+    "id": 102,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You define a field schema for an Azure Content Understanding document analyzer. One field, ExecutiveSummary, should contain a short summary of the whole contract that does not literally appear anywhere in the document. Which value should you set for the field's method property?",
+    "options": [
+      { "id": "A", "text": "extract" },
+      { "id": "B", "text": "classify" },
+      { "id": "C", "text": "lookup" },
+      { "id": "D", "text": "generate" }
+    ],
+    "correct": ["D"],
+    "explanation": "Content Understanding field extraction supports three methods: extract pulls specific data that exists in the content (such as dates or line items), classify assigns content to predefined categories, and generate produces new insights such as document summaries or chapter overviews. Because a summary is inferred rather than read verbatim, extract is wrong; lookup is not a supported method.",
+    "source": {
+      "path": "Azure Content Understanding documentation",
+      "module": "Document",
+      "unit": "Azure Content Understanding document overview",
+      "url": "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/document/overview"
+    }
+  },
+  {
+    "id": 103,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "A bank uses an Azure Content Understanding analyzer to extract loan application fields and wants to route low-confidence or poorly grounded values to a human reviewer. The analysis results currently contain no confidence or source values for the fields. What should you change?",
+    "options": [
+      { "id": "A", "text": "Set returnDetails to false in the analyzer config" },
+      { "id": "B", "text": "Change every field's method from extract to generate" },
+      { "id": "C", "text": "Set estimateFieldSourceAndConfidence to true in the analyzer config (or estimateSourceAndConfidence on specific fields)" },
+      { "id": "D", "text": "Use the analyzeBinary operation instead of analyze" }
+    ],
+    "correct": ["C"],
+    "explanation": "The confidence and grounding API is an opt-in feature for all document field types; you set estimateFieldSourceAndConfidence = true in the analyzer config or estimateSourceAndConfidence = true for a specific field, after which each field returns a confidence score and a source grounding reference that can drive human-in-the-loop routing. Changing the method to generate does not enable confidence, and the analyze vs analyzeBinary choice only affects how content is submitted.",
+    "source": {
+      "path": "Azure Content Understanding documentation",
+      "module": "Document",
+      "unit": "Azure Content Understanding document overview",
+      "url": "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/document/overview"
+    }
+  },
+  {
+    "id": 104,
+    "topic": "information-extraction",
+    "type": "mc_single",
+    "question": "You are ingesting mixed PDF, Office, and image files into a vector index for a RAG application and want Azure Content Understanding to produce Markdown with figure descriptions, a document summary, and chunked output ready for embedding, without defining a custom schema. Which prebuilt analyzer should you use?",
+    "options": [
+      { "id": "A", "text": "prebuilt-documentSearch" },
+      { "id": "B", "text": "prebuilt-read" },
+      { "id": "C", "text": "prebuilt-documentFieldSchema" },
+      { "id": "D", "text": "prebuilt-digitalParse" }
+    ],
+    "correct": ["A"],
+    "explanation": "prebuilt-documentSearch is the RAG analyzer recommended for document ingestion: it extracts paragraphs, tables and figures as Markdown, generates figure descriptions and a one-paragraph summary, and produces chunked output ready for embedding and vector indexing. prebuilt-read provides basic OCR without layout or summaries, prebuilt-digitalParse reads only the file's internal structure, and prebuilt-documentFieldSchema proposes a field schema rather than extracting content.",
+    "source": {
+      "path": "Azure Content Understanding documentation",
+      "module": "Concepts",
+      "unit": "Prebuilt analyzers",
+      "url": "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/prebuilt-analyzers"
+    }
+  },
+  {
+    "id": 105,
+    "topic": "information-extraction",
+    "type": "sequence",
+    "question": "You are building an Azure Content Understanding solution with Content Understanding Studio to extract fields from insurance claim forms. Arrange the high-level steps in the correct order.",
+    "items": [
+      { "id": "S1", "text": "Build an analyzer based on the completed schema" },
+      { "id": "S2", "text": "Create a Microsoft Foundry resource" },
+      { "id": "S3", "text": "Use the analyzer to extract or generate fields from new content" },
+      { "id": "S4", "text": "Define a Content Understanding schema for the information to be extracted, based on a content sample and an analyzer template" }
+    ],
+    "correct_order": ["S2", "S4", "S1", "S3"],
+    "explanation": "The documented high-level process is: create a Foundry resource, define a Content Understanding schema (which can be based on a content sample and an analyzer template), build an analyzer from the completed schema, and finally use the analyzer to extract or generate fields from new content. The schema must exist before the analyzer can be built, and building makes the analyzer available to client applications through the Foundry resource endpoint.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create a multimodal analysis solution with Azure Content Understanding",
+      "unit": "Create a Content Understanding analyzer",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai/03-create-analyzer"
+    }
+  },
+  {
+    "id": 106,
+    "topic": "information-extraction",
+    "type": "sequence",
+    "question": "You are setting up integrated data chunking and vectorization in Azure AI Search so that an indexer retrieves PDFs from Azure Blob Storage, chunks them, embeds the chunks with Azure OpenAI, and keeps the index fresh. Arrange the documented steps in order.",
+    "items": [
+      { "id": "S1", "text": "Create an index that specifies a vectorizer for query time and assign it to the vector fields" },
+      { "id": "S2", "text": "Create a data source connection to the supported data source" },
+      { "id": "S3", "text": "Create an indexer to drive data retrieval, skillset execution, and indexing, ideally on a schedule" },
+      { "id": "S4", "text": "Create a skillset that calls the Text Split skill for chunking and the AzureOpenAIEmbedding skill to vectorize chunks" }
+    ],
+    "correct_order": ["S2", "S4", "S1", "S3"],
+    "explanation": "The documented sequence for chunking and vectorization during indexing is: create a data source connection, create a skillset with the Text Split skill and an embedding skill, create an index that specifies a vectorizer assigned to its vector fields, and create an indexer that drives everything from retrieval through indexing. Running the indexer on a schedule is recommended so documents throttled by the Azure OpenAI endpoint are picked up on a later run.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Vector search",
+      "unit": "Integrated vectorization overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/vector-search-integrated-vectorization"
+    }
+  },
+  {
+    "id": 107,
+    "topic": "information-extraction",
+    "type": "sequence",
+    "question": "You are training an Azure Document Intelligence custom extraction model by using the REST API rather than Document Intelligence Studio. Arrange the steps in the correct order.",
+    "items": [
+      { "id": "S1", "text": "Call the Build model REST API function" },
+      { "id": "S2", "text": "Store the sample forms in an Azure blob container together with an ocr.json and labels.json file per form and a single fields.json file" },
+      { "id": "S3", "text": "Call the Analyze document function with the trained model ID to extract data from a new form" },
+      { "id": "S4", "text": "Generate a shared access signature (SAS) URL for the container" },
+      { "id": "S5", "text": "Call the Get model REST API function to retrieve the trained model ID" }
+    ],
+    "correct_order": ["S2", "S4", "S1", "S5", "S3"],
+    "explanation": "To train a custom model via REST you first store the sample forms with their ocr.json, labels.json, and the single fields.json in a blob container, generate a SAS URL for the container, call Build model, then call Get model to retrieve the trained model ID. Only after the model ID is known can the Analyze document function be called with that ID to extract data from new forms.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Train and use custom models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/5-train-custom-models"
+    }
+  },
+  {
+    "id": 108,
+    "topic": "information-extraction",
+    "type": "sequence",
+    "question": "You are writing a Python client that uses the Azure Content Understanding REST API with the requests library to analyze a business card image hosted at a URL. Arrange the steps in the correct order.",
+    "items": [
+      { "id": "S1", "text": "Loop sending GET requests to {endpoint}/contentunderstanding/analyzerResults/{id}?api-version=2025-11-01 while status is Running" },
+      { "id": "S2", "text": "Read the id value from the JSON response of the submission" },
+      { "id": "S3", "text": "Send a POST request to {endpoint}/contentunderstanding/analyzers/{analyzer}:analyze?api-version=2025-11-01 with an inputs array containing the url" },
+      { "id": "S4", "text": "When status is Succeeded, iterate result.contents[].fields and read valueString for string fields" }
+    ],
+    "correct_order": ["S3", "S2", "S1", "S4"],
+    "explanation": "The documented REST flow is to POST the inputs array with the content url to the :analyze endpoint, extract the operation id from the response JSON, poll the analyzerResults endpoint with GET requests while the status is Running, and once the status is Succeeded parse result.contents, reading each field's valueString for string-typed fields. Polling cannot begin before the id is known, and parsing before completion returns no fields.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Analyze content",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/04-analyze"
+    }
+  },
+  {
+    "id": 109,
+    "topic": "information-extraction",
+    "type": "sequence",
+    "question": "A developer wants to use Document Intelligence Studio to extract fields from a batch of invoices with a prebuilt model before writing any code. Arrange the documented steps in order.",
+    "items": [
+      { "id": "S1", "text": "Upload or provide a URL to the document you want to analyze" },
+      { "id": "S2", "text": "Create an Azure Document Intelligence or Foundry Tools resource in the Azure portal" },
+      { "id": "S3", "text": "Review the extracted fields and their confidence scores" },
+      { "id": "S4", "text": "Open Document Intelligence Studio and select a prebuilt model such as Invoice" },
+      { "id": "S5", "text": "Provide your resource endpoint and key" }
+    ],
+    "correct_order": ["S2", "S4", "S5", "S1", "S3"],
+    "explanation": "The unit lists the steps as: create an Azure Document Intelligence or Foundry Tools resource, open the Studio at documentintelligence.ai.azure.com and select a prebuilt model (for example Invoice, Receipt, or ID Document), provide the resource endpoint and key, upload or link the document, and review the extracted fields and confidence scores. The Studio cannot analyze anything until it is bound to a resource via endpoint and key.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Use the Document Intelligence Studio",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/3-use-document-intelligence-studio"
+    }
+  },
+  {
+    "id": 110,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "You are tuning a hybrid query against Azure AI Search that uses the semantic ranker to produce grounding data for an LLM. According to the hybrid search documentation, which of the following recommendations apply? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "Set k to 50 on the vector queries to maximize the inputs to the semantic ranker" },
+      { "id": "B", "text": "Add an orderby clause so results are sorted consistently" },
+      { "id": "C", "text": "Use select to return human-readable text fields for display or for sending to the LLM" },
+      { "id": "D", "text": "Set queryType to semantic and specify a semanticConfiguration to invoke the ranker" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "The documented key points are that k should be set to 50 when using semantic ranker, select should return human-readable fields for users or an LLM, and queryType=semantic with a semanticConfiguration invokes the semantic ranker. An orderby clause is deliberately omitted because explicit sort orders override relevance-ranked results, so adding it would discard the BM25/RRF/semantic ranking.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Hybrid search",
+      "unit": "Hybrid search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"
+    }
+  },
+  {
+    "id": 111,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "A team is evaluating the Azure AI Search semantic ranker for their documentation search. Which statements about the semantic ranker are correct? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "Captions and answers are verbatim text extracted from the index; no generative model composes new content" },
+      { "id": "B", "text": "It reruns the query over the entire corpus to find semantically relevant documents" },
+      { "id": "C", "text": "It adds a secondary ranking over an initial result set scored by BM25 or RRF" },
+      { "id": "D", "text": "The reranker assigns a @search.rerankerScore between 0 and 4, with higher values indicating higher relevance" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "Semantic ranker always adds a secondary (L2) ranking over an initial BM25- or RRF-ranked result set, assigns a @search.rerankerScore from 4 to 0, and returns captions and answers that are always verbatim text from the index. It cannot rerun the query over the whole corpus; it only reranks the existing top 50 results, which is why option B is wrong.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Semantic ranking",
+      "unit": "Semantic ranking overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/semantic-search-overview"
+    }
+  },
+  {
+    "id": 112,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "You are deciding between the Azure Content Understanding skill and the Document Layout skill for an Azure AI Search enrichment pipeline that feeds a RAG application. Which advantages does the documentation attribute to the Azure Content Understanding skill? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "Tables and figures are output in Markdown, which LLMs understand more easily" },
+      { "id": "B", "text": "It provides 20 free documents per indexer per day like other Foundry Tools skills" },
+      { "id": "C", "text": "Tables that span multiple pages can be extracted as a single unit" },
+      { "id": "D", "text": "It performs both content extraction and chunking, so a Text Split skill is not needed" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "The Azure Content Understanding skill outputs tables and figures as Markdown, recognizes cross-page tables as a single unit, allows chunks to span pages, and handles both extraction and chunking so no Text Split skill is required. Unlike the Document Layout skill and other Foundry Tools skills, it does not provide 20 free documents per indexer per day; it is billed at the Content Understanding price.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "Azure Content Understanding skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-content-understanding"
+    }
+  },
+  {
+    "id": 113,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "Your Azure Document Intelligence solution must detect signatures, handle fields whose bounding regions overlap, and return confidence at the table, row, and cell level. Which capabilities does the custom neural model support that make it the right choice? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "Overlapping fields" },
+      { "id": "B", "text": "Training in a few minutes with support for more than 100 languages" },
+      { "id": "C", "text": "Signature detection" },
+      { "id": "D", "text": "Table, row, and cell level confidence" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "Custom neural models support overlapping fields, signature detection, and table, row, and cell level confidence, and deliver higher accuracy for semi-structured and unstructured documents. Training in minutes with 100+ language support is a characteristic of custom template models; neural models take longer to train and support fewer languages.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Extract data with Azure Document Intelligence",
+      "unit": "Train and use custom models",
+      "url": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/5-train-custom-models"
+    }
+  },
+  {
+    "id": 114,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "You plan to call the Azure Content Understanding API from a Python application against a newly created Microsoft Foundry resource. Which model deployments must be set up on the Foundry resource before the API can be used? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "GPT-4.1" },
+      { "id": "B", "text": "text-embedding-ada-002" },
+      { "id": "C", "text": "GPT-4.1-mini" },
+      { "id": "D", "text": "text-embedding-3-large" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "Before using the Content Understanding API you must set up default model deployments for the Foundry resource: Content Understanding requires GPT-4.1, GPT-4.1-mini, and text-embedding-3-large deployments, which can be configured in the Azure portal or via the API. text-embedding-ada-002 is an older Azure OpenAI embedding model and is not the required embedding deployment for Content Understanding.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Prepare to use the AI Content Understanding API",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/02-prepare-content-understanding"
+    }
+  },
+  {
+    "id": 115,
+    "topic": "information-extraction",
+    "type": "mc_multi",
+    "question": "A data team wants the enriched output of an Azure AI Search indexing pipeline to be reused outside the index: as JSON files for an ETL process, as relational tables for reporting, and as the images extracted from documents. Which types of projections can a knowledge store defined in the skillset contain? (Select all that apply.)",
+    "options": [
+      { "id": "A", "text": "Object projections (JSON objects)" },
+      { "id": "B", "text": "Vector projections (embedding arrays)" },
+      { "id": "C", "text": "Table projections" },
+      { "id": "D", "text": "File projections (image files)" }
+    ],
+    "correct": ["A", "C", "D"],
+    "explanation": "A knowledge store defined in the skillset consists of projections of the enriched data, which can be JSON objects, tables, or image files; the projections are generated and persisted when the indexer runs the pipeline. Vector projections are not a knowledge store projection type; embeddings are stored in vector fields of the search index instead.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create a knowledge mining solution with Azure AI Search",
+      "unit": "Persist extracted information in a knowledge store",
+      "url": "https://learn.microsoft.com/en-us/training/modules/ai-knowldge-mining/6-knowledge-store"
+    }
+  },
+  {
+    "id": 116,
+    "topic": "information-extraction",
+    "type": "hotspot",
+    "question": "Complete the hybrid query request body sent to POST https://{service}.search.windows.net/indexes/docs-index/docs/search?api-version=2026-04-01 so that it runs keyword plus vector search and reranks with the semantic ranker:\n\n{\n  \"search\": \"warranty claim procedure\",\n  \"vectorQueries\": [\n    { \"kind\": \"[B1]\", \"vector\": [ ... ], \"k\": [B2], \"fields\": \"contentVector\" }\n  ],\n  \"top\": 10,\n  \"queryType\": \"[B3]\",\n  \"semanticConfiguration\": \"my-semantic-config\"\n}",
+    "blanks": [
+      {
+        "id": "B1",
+        "prompt": "[B1] kind of vector query",
+        "options": [
+          { "id": "a", "text": "vector" },
+          { "id": "b", "text": "embedding" },
+          { "id": "c", "text": "hnsw" }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "B2",
+        "prompt": "[B2] recommended k when using semantic ranker",
+        "options": [
+          { "id": "a", "text": "10" },
+          { "id": "b", "text": "50" },
+          { "id": "c", "text": "1000" }
+        ],
+        "correct": "b"
+      },
+      {
+        "id": "B3",
+        "prompt": "[B3] queryType that invokes the semantic ranker",
+        "options": [
+          { "id": "a", "text": "full" },
+          { "id": "b", "text": "simple" },
+          { "id": "c", "text": "semantic" }
+        ],
+        "correct": "c"
+      }
+    ],
+    "explanation": "In the documented hybrid query each entry in vectorQueries uses kind: vector with a vector array, k, and fields; the docs recommend setting k to 50 when using semantic ranker to maximize its inputs. queryType=semantic together with semanticConfiguration invokes the semantic ranker; full and simple are the Lucene syntax variants for the keyword portion and do not enable reranking. hnsw is an index algorithm, not a query kind.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Hybrid search",
+      "unit": "Hybrid search overview",
+      "url": "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview"
+    }
+  },
+  {
+    "id": 117,
+    "topic": "information-extraction",
+    "type": "hotspot",
+    "question": "Complete the Azure AI Search skill definition that extracts text from images that the blob indexer has normalized:\n\n{\n  \"@odata.type\": \"[B1]\",\n  \"context\": \"[B2]\",\n  \"defaultLanguageCode\": \"en\",\n  \"inputs\": [ { \"name\": \"image\", \"source\": \"/document/normalized_images/*\" } ],\n  \"outputs\": [ { \"name\": \"[B3]\", \"targetName\": \"imageText\" } ]\n}",
+    "blanks": [
+      {
+        "id": "B1",
+        "prompt": "[B1] skill type",
+        "options": [
+          { "id": "a", "text": "#Microsoft.Skills.Vision.OcrSkill" },
+          { "id": "b", "text": "#Microsoft.Skills.Vision.ImageAnalysisSkill" },
+          { "id": "c", "text": "#Microsoft.Skills.Util.DocumentExtractionSkill" }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "B2",
+        "prompt": "[B2] context so the skill runs once per image",
+        "options": [
+          { "id": "a", "text": "/document" },
+          { "id": "b", "text": "/document/normalized_images/*" },
+          { "id": "c", "text": "/document/content" }
+        ],
+        "correct": "b"
+      },
+      {
+        "id": "B3",
+        "prompt": "[B3] output containing the plain extracted text",
+        "options": [
+          { "id": "a", "text": "layoutText" },
+          { "id": "b", "text": "mergedText" },
+          { "id": "c", "text": "text" }
+        ],
+        "correct": "c"
+      }
+    ],
+    "explanation": "The OCR skill is #Microsoft.Skills.Vision.OcrSkill, runs with context /document/normalized_images/* so it executes once per normalized image, and exposes two outputs: text (plain extracted text) and layoutText (a complex type with line and word bounding boxes). mergedText is the output of the Text Merge skill, not the OCR skill, and the Image Analysis skill produces captions and tags rather than OCR text.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "OCR skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr"
+    }
+  },
+  {
+    "id": 118,
+    "topic": "information-extraction",
+    "type": "hotspot",
+    "question": "Complete the JSON definition of a custom Azure Content Understanding analyzer that reads two values from scanned business cards:\n\n{\n  \"description\": \"Simple business card\",\n  \"baseAnalyzerId\": \"[B1]\",\n  \"config\": { \"returnDetails\": true },\n  \"fieldSchema\": {\n    \"fields\": {\n      \"ContactName\": { \"type\": \"string\", \"method\": \"[B2]\", \"description\": \"Name on business card\" }\n    }\n  },\n  \"models\": { \"completion\": \"[B3]\", \"embedding\": \"text-embedding-3-large\" }\n}",
+    "blanks": [
+      {
+        "id": "B1",
+        "prompt": "[B1] base analyzer for document content",
+        "options": [
+          { "id": "a", "text": "prebuilt-layout" },
+          { "id": "b", "text": "prebuilt-document" },
+          { "id": "c", "text": "prebuilt-invoice" }
+        ],
+        "correct": "b"
+      },
+      {
+        "id": "B2",
+        "prompt": "[B2] method for a value that literally appears on the card",
+        "options": [
+          { "id": "a", "text": "extract" },
+          { "id": "b", "text": "generate" },
+          { "id": "c", "text": "classify" }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "B3",
+        "prompt": "[B3] completion model named in the training sample",
+        "options": [
+          { "id": "a", "text": "gpt-4.1" },
+          { "id": "b", "text": "text-embedding-3-large" },
+          { "id": "c", "text": "gpt-35-turbo" }
+        ],
+        "correct": "a"
+      }
+    ],
+    "explanation": "The sample analyzer definition is based on the prebuilt document base analyzer (baseAnalyzerId: prebuilt-document), defines string fields with method extract because the values exist in the document and can be read rather than inferred, and includes a models object with completion gpt-4.1 and embedding text-embedding-3-large. generate is for inferred fields such as summaries, and prebuilt-layout is a content extraction analyzer rather than one of the four base analyzers used for custom analyzers.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Create a Content Understanding analyzer",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/03-create-analyzer"
+    }
+  },
+  {
+    "id": 119,
+    "topic": "information-extraction",
+    "type": "hotspot",
+    "question": "Complete the Python code that uses the azure-ai-contentunderstanding SDK to analyze a business card with a custom analyzer and print its string fields:\n\nfrom azure.ai.contentunderstanding import [B1]\nfrom azure.ai.contentunderstanding.models import AnalysisInput\nfrom azure.core.credentials import AzureKeyCredential\n\nclient = [B1](endpoint=endpoint, credential=AzureKeyCredential(key))\npoller = client.[B2](analyzer_id=\"business_card_analyser\", inputs=[AnalysisInput(url=card_url)])\nresult = poller.result()\ncontent = result.[B3][0]\nfor name, field in content.fields.items():\n    if field.type == \"string\":\n        print(f\"{name}: {field.value}\")",
+    "blanks": [
+      {
+        "id": "B1",
+        "prompt": "[B1] client class",
+        "options": [
+          { "id": "a", "text": "DocumentIntelligenceClient" },
+          { "id": "b", "text": "ContentUnderstandingClient" },
+          { "id": "c", "text": "AIProjectClient" }
+        ],
+        "correct": "b"
+      },
+      {
+        "id": "B2",
+        "prompt": "[B2] method that submits content for analysis",
+        "options": [
+          { "id": "a", "text": "begin_analyze" },
+          { "id": "b", "text": "begin_analyze_document" },
+          { "id": "c", "text": "begin_create_analyzer" }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "B3",
+        "prompt": "[B3] property of AnalysisResult holding the per-content results",
+        "options": [
+          { "id": "a", "text": "documents" },
+          { "id": "b", "text": "pages" },
+          { "id": "c", "text": "contents" }
+        ],
+        "correct": "c"
+      }
+    ],
+    "explanation": "The Content Understanding Python SDK exposes ContentUnderstandingClient, whose begin_analyze(analyzer_id=..., inputs=[AnalysisInput(url=...)]) returns a poller; poller.result() handles polling automatically and returns an AnalysisResult whose contents property is a list of content objects with fields, markdown, and metadata. begin_create_analyzer creates an analyzer rather than analyzing content, and begin_analyze_document with DocumentIntelligenceClient belongs to the Document Intelligence SDK.",
+    "source": {
+      "path": "Extract insights from visual data on Azure",
+      "module": "Create an Azure Content Understanding client application",
+      "unit": "Analyze content",
+      "url": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/04-analyze"
+    }
+  },
+  {
+    "id": 120,
+    "topic": "information-extraction",
+    "type": "hotspot",
+    "question": "Complete the Azure AI Search skillset entry that uses Azure Content Understanding to extract and chunk document content with page location metadata:\n\n{\n  \"@odata.type\": \"[B1]\",\n  \"context\": \"/document\",\n  \"extractionOptions\": [\"images\", \"locationMetadata\"],\n  \"chunkingProperties\": { \"unit\": \"characters\", \"maximumLength\": 1325, \"overlapLength\": 0 },\n  \"inputs\": [ { \"name\": \"[B2]\", \"source\": \"/document/file_data\" } ],\n  \"outputs\": [\n    { \"name\": \"[B3]\", \"targetName\": \"text_sections\" },\n    { \"name\": \"normalized_images\", \"targetName\": \"normalized_images\" }\n  ]\n}",
+    "blanks": [
+      {
+        "id": "B1",
+        "prompt": "[B1] skill type",
+        "options": [
+          { "id": "a", "text": "#Microsoft.Skills.Util.ContentUnderstandingSkill" },
+          { "id": "b", "text": "#Microsoft.Skills.Util.DocumentIntelligenceLayoutSkill" },
+          { "id": "c", "text": "#Microsoft.Skills.Text.SplitSkill" }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "B2",
+        "prompt": "[B2] name of the skill's single input",
+        "options": [
+          { "id": "a", "text": "image" },
+          { "id": "b", "text": "file_data" },
+          { "id": "c", "text": "text" }
+        ],
+        "correct": "b"
+      },
+      {
+        "id": "B3",
+        "prompt": "[B3] output that holds the Markdown chunks",
+        "options": [
+          { "id": "a", "text": "textItems" },
+          { "id": "b", "text": "markdown" },
+          { "id": "c", "text": "text_sections" }
+        ],
+        "correct": "c"
+      }
+    ],
+    "explanation": "The Azure Content Understanding skill has @odata.type #Microsoft.Skills.Util.ContentUnderstandingSkill, takes a single file_data input (a file reference object such as /document/file_data), and produces text_sections, a collection of Markdown chunk objects with locationMetadata, plus normalized_images when extractionOptions includes images. textItems is the output of the Text Split skill, and the Document Layout skill is a different skill that outputs plain text tables.",
+    "source": {
+      "path": "Azure AI Search documentation",
+      "module": "Skills reference",
+      "unit": "Azure Content Understanding skill",
+      "url": "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-content-understanding"
+    }
+  }
+]

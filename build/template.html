@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AI-103 Practice — Developing AI Apps and Agents on Azure</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'media', theme: { extend: { colors: { msblue: '#0078D4' } } } };
+  </script>
+  <style>
+    body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    [data-view] { display: none; }
+    [data-view].active { display: block; }
+    .opt-btn { min-height: 48px; }
+    pre { white-space: pre-wrap; word-break: break-word; font-family: inherit; }
+    pre code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+  <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div>
+        <h1 class="text-lg font-bold leading-tight">AI-103 Practice</h1>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Developing AI Apps and Agents on Azure</div>
+      </div>
+      <button id="btn-reset" class="text-sm px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900">Reset</button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-4">
+    <section data-view="home" class="active" id="view-home"></section>
+    <section data-view="practice" id="view-practice"></section>
+    <section data-view="results" id="view-results"></section>
+  </main>
+
+  <script>
+    /*
+     * QUESTION SCHEMA
+     * ================
+     * Common fields:
+     *   id          : sequential int, unique
+     *   topic       : one of TOPICS[].id (official AI-103 study-guide skill areas)
+     *   type        : "mc_single" | "mc_multi" | "sequence" | "hotspot"
+     *   question    : body text (rendered in <pre>; escaped)
+     *   explanation : feedback text (rendered in <pre>; escaped)
+     *   source      : { path, module, unit, url }  — Microsoft Learn attribution
+     *
+     * Type-specific:
+     *   mc_single, mc_multi : { options: [{id, text}], correct: [id] }
+     *   sequence            : { items:   [{id, text}], correct_order: [id] }
+     *   hotspot             : { blanks:  [{id, prompt, options: [{id, text}], correct: id}] }
+     */
+
+    // ============================================================
+    // QUESTIONS_DATA_START
+    // ============================================================
+    const RAW_QUESTIONS = __QUESTIONS__;
+    // ============================================================
+    // QUESTIONS_DATA_END
+    // ============================================================
+
+    // Official "Skills at a glance" order and weights from the AI-103 study guide (as of April 16, 2026).
+    const TOPICS = [
+      { id: "plan-and-manage", title: "Plan and manage an Azure AI solution",
+        weight: "25–30%", subtitle: "Choose Foundry services, set up projects & deployments, monitor/secure, responsible AI" },
+      { id: "genai-agentic", title: "Implement generative AI and agentic solutions",
+        weight: "30–35%", subtitle: "Build generative apps and agents with Foundry, optimize and operationalize" },
+      { id: "computer-vision", title: "Implement computer vision solutions",
+        weight: "10–15%", subtitle: "Image/video generation, multimodal understanding, Content Understanding, visual responsible AI" },
+      { id: "text-analysis", title: "Implement text analysis solutions",
+        weight: "10–15%", subtitle: "Azure Language, LLM text analysis, Translator, Speech, Voice Live" },
+      { id: "information-extraction", title: "Implement information extraction solutions",
+        weight: "10–15%", subtitle: "Azure AI Search retrieval/grounding, skills, Document Intelligence, Content Understanding" },
+    ];
+    const TOPIC_WEIGHTS = {
+      "plan-and-manage": 27.5,
+      "genai-agentic": 32.5,
+      "computer-vision": 12.5,
+      "text-analysis": 12.5,
+      "information-extraction": 12.5,
+    };
+    const STUDY_GUIDE_URL = "https://learn.microsoft.com/en-gb/credentials/certifications/resources/study-guides/ai-103";
+    const STORAGE_KEY = "ai103-practice-v1";
+    let memoryState = null;
+
+    // -------- Validator --------
+    function validateQuestions(arr) {
+      const valid = [], invalid = [];
+      const seenIds = new Set();
+      const topicIds = TOPICS.map(t => t.id);
+      for (const q of arr) {
+        if (!q || typeof q !== 'object') { invalid.push({ id: null, errs: ['not an object'] }); continue; }
+        const errs = [];
+        if (typeof q.id !== 'number') errs.push('missing id');
+        else if (seenIds.has(q.id)) errs.push('duplicate id ' + q.id);
+        if (!topicIds.includes(q.topic)) errs.push('bad topic');
+        if (!['mc_single','mc_multi','sequence','hotspot'].includes(q.type)) errs.push('bad type');
+        if (typeof q.question !== 'string' || !q.question) errs.push('missing question');
+        if (typeof q.explanation !== 'string') errs.push('missing explanation');
+        if (!q.source || !q.source.url || !q.source.path || !q.source.module || !q.source.unit) errs.push('missing source');
+
+        if (q.type === 'mc_single' || q.type === 'mc_multi') {
+          if (!Array.isArray(q.options) || q.options.length < 2) errs.push('options must be array of 2+');
+          if (!Array.isArray(q.correct) || q.correct.length === 0) errs.push('correct must be non-empty array');
+          if (q.type === 'mc_single' && q.correct && q.correct.length !== 1) errs.push('mc_single must have exactly 1 correct');
+          if (q.type === 'mc_multi'  && q.correct && q.correct.length < 2)   errs.push('mc_multi must have 2+ correct');
+          const optIds = new Set((q.options || []).map(o => o && o.id));
+          for (const c of (q.correct || [])) if (!optIds.has(c)) errs.push('correct id not in options: ' + c);
+        } else if (q.type === 'sequence') {
+          if (!Array.isArray(q.items) || q.items.length < 3) errs.push('items must be array of 3+');
+          if (!Array.isArray(q.correct_order)) errs.push('correct_order missing');
+          else if (q.items && q.items.length !== q.correct_order.length) errs.push('items/correct_order length mismatch');
+          const itemIds = new Set((q.items || []).map(i => i && i.id));
+          for (const c of (q.correct_order || [])) if (!itemIds.has(c)) errs.push('correct_order id not in items: ' + c);
+        } else if (q.type === 'hotspot') {
+          if (!Array.isArray(q.blanks) || q.blanks.length < 2) errs.push('blanks must be array of 2+');
+          for (const b of (q.blanks || [])) {
+            if (!b || !b.id || !b.prompt || !Array.isArray(b.options) || b.options.length < 2 || b.correct == null) {
+              errs.push('blank malformed'); break;
+            }
+            const blankIds = new Set(b.options.map(o => o && o.id));
+            if (!blankIds.has(b.correct)) { errs.push('blank correct not in options: ' + b.correct); break; }
+          }
+        }
+        if (errs.length === 0) { valid.push(q); seenIds.add(q.id); }
+        else { invalid.push({ id: q && q.id, errs }); }
+      }
+      return { valid, invalid };
+    }
+
+    const _vRes = validateQuestions(RAW_QUESTIONS);
+    const QUESTIONS = _vRes.valid;
+    if (_vRes.invalid.length) console.warn('Rejected', _vRes.invalid.length, 'invalid questions:', _vRes.invalid);
+
+    // -------- State --------
+    function emptyState() { return { results: {}, currentTopic: null, wrongQueue: [] }; }
+    function loadState() {
+      let s;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        s = raw ? JSON.parse(raw) : emptyState();
+      } catch (e) {
+        if (memoryState) return memoryState;
+        memoryState = emptyState();
+        return memoryState;
+      }
+      const validIds = new Set(QUESTIONS.map(q => q.id));
+      s.wrongQueue = Array.isArray(s.wrongQueue) ? s.wrongQueue.filter(id => validIds.has(id)) : [];
+      if (!s.results || typeof s.results !== 'object') s.results = {};
+      return s;
+    }
+    function saveState(s) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+      catch (e) { memoryState = s; }
+    }
+    function questionsForTopic(topicId) { return QUESTIONS.filter(q => q.topic === topicId); }
+    function statsFor(qs, state) {
+      let answered = 0, correct = 0;
+      for (const q of qs) {
+        const r = state.results[q.id];
+        if (r) { answered++; if (r.correct) correct++; }
+      }
+      const pct = answered === 0 ? 0 : Math.round((correct / answered) * 100);
+      return { total: qs.length, answered, correct, pct };
+    }
+
+    // -------- Helpers --------
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+    }
+    function sameSet(a, b) {
+      if (a.length !== b.length) return false;
+      const sb = new Set(b);
+      for (const x of a) if (!sb.has(x)) return false;
+      return true;
+    }
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // -------- Views --------
+    function showView(name) {
+      document.querySelectorAll('[data-view]').forEach(s => s.classList.toggle('active', s.dataset.view === name));
+      window.scrollTo(0, 0);
+    }
+
+    function renderHome() {
+      const state = loadState();
+      const root = document.getElementById('view-home');
+      const all = statsFor(QUESTIONS, state);
+
+      const intro = `
+        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Organised by the official <a href="${STUDY_GUIDE_URL}" target="_blank" rel="noopener noreferrer" class="text-msblue underline">AI-103 study guide ↗</a>
+          "Skills at a glance". ${QUESTIONS.length} questions sourced from Microsoft Learn.
+          ${all.answered ? `Overall: ${all.answered} / ${all.total} answered · ${all.pct}% correct.` : ''}
+        </div>`;
+
+      const cards = TOPICS.map(t => {
+        const s = statsFor(questionsForTopic(t.id), state);
+        const disabled = s.total === 0;
+        return `
+          <button class="topic-card w-full text-left bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-msblue active:bg-gray-100 dark:active:bg-gray-700'}"
+                  data-topic="${t.id}" ${disabled ? 'disabled' : ''}>
+            <div class="flex justify-between items-start gap-2">
+              <div class="font-semibold">${t.title}</div>
+              <div class="text-sm text-gray-500 whitespace-nowrap">${t.weight}</div>
+            </div>
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">${t.subtitle}</div>
+            <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              ${disabled ? 'no questions yet' : `${s.total} questions · ${s.answered} answered · ${s.pct}% correct`}
+            </div>
+            ${disabled ? '' : `<div class="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden"><div class="h-full bg-msblue" style="width:${Math.round((s.answered/s.total)*100)}%"></div></div>`}
+          </button>`;
+      }).join('');
+
+      const queueLen = state.wrongQueue.length;
+      const queueCard = queueLen > 0 ? `
+        <button class="w-full text-left bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-3" data-mode="wrong-queue">
+          <div class="font-semibold text-red-700 dark:text-red-300">Wrong-answer queue (${queueLen})</div>
+          <div class="text-sm text-red-600 dark:text-red-400 mt-1">Drill questions you got wrong until you get them right</div>
+        </button>` : '';
+
+      const mixedCard = QUESTIONS.length > 0 ? `
+        <button class="w-full text-left bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-msblue" data-mode="mixed">
+          <div class="font-semibold">Mixed — random across available topics</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">20 questions, weighted by exam percentage</div>
+        </button>` : '';
+
+      const unseen = QUESTIONS.filter(q => !state.results[q.id]).length;
+      const unseenCard = unseen > 0 && unseen < QUESTIONS.length ? `
+        <button class="w-full text-left bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-msblue" data-mode="unseen">
+          <div class="font-semibold">Unanswered only (${unseen})</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Work through every question you have not tried yet</div>
+        </button>` : '';
+
+      root.innerHTML = intro + cards + mixedCard + unseenCard + queueCard;
+
+      root.querySelectorAll('.topic-card').forEach(el => el.addEventListener('click', () => startTopic(el.dataset.topic)));
+      root.querySelector('[data-mode="mixed"]')?.addEventListener('click', startMixed);
+      root.querySelector('[data-mode="unseen"]')?.addEventListener('click', startUnseen);
+      root.querySelector('[data-mode="wrong-queue"]')?.addEventListener('click', startWrongQueue);
+    }
+
+    // -------- Session --------
+    let session = null;
+    function newSession(mode, topicId, ids) {
+      session = { mode, topicId, queue: ids, cursor: 0, score: { right: 0, wrong: 0 } };
+      showView('practice'); renderPractice();
+    }
+
+    function startTopic(topicId) {
+      const qs = questionsForTopic(topicId);
+      if (qs.length === 0) return;
+      const state = loadState(); state.currentTopic = topicId; saveState(state);
+      newSession('topic', topicId, shuffle(qs.map(q => q.id)));
+    }
+
+    function startMixed() {
+      const topicIds = Object.keys(TOPIC_WEIGHTS).filter(t => questionsForTopic(t).length > 0);
+      const totalWeight = topicIds.reduce((s, t) => s + TOPIC_WEIGHTS[t], 0);
+      const picked = []; const seen = new Set(); let attempts = 0;
+      while (picked.length < 20 && picked.length < QUESTIONS.length && attempts < 500) {
+        attempts++;
+        const r = Math.random() * totalWeight;
+        let acc = 0, chosenTopic = topicIds[0];
+        for (const t of topicIds) { acc += TOPIC_WEIGHTS[t]; if (r <= acc) { chosenTopic = t; break; } }
+        const pool = questionsForTopic(chosenTopic);
+        const q = pool[Math.floor(Math.random() * pool.length)];
+        if (seen.has(q.id)) continue;
+        seen.add(q.id); picked.push(q.id);
+      }
+      if (picked.length === 0) return;
+      newSession('mixed', null, picked);
+    }
+
+    function startUnseen() {
+      const state = loadState();
+      const ids = QUESTIONS.filter(q => !state.results[q.id]).map(q => q.id);
+      if (ids.length === 0) return;
+      newSession('unseen', null, shuffle(ids));
+    }
+
+    function startWrongQueue() {
+      const state = loadState();
+      if (state.wrongQueue.length === 0) return;
+      newSession('wrong-queue', null, shuffle(state.wrongQueue));
+    }
+
+    function commonHeader(q) {
+      const typeLabel = { mc_single: 'single choice', mc_multi: 'multiple choice', sequence: 'ordering', hotspot: 'hotspot' }[q.type] || q.type;
+      const topic = TOPICS.find(t => t.id === q.topic);
+      return `
+        <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+          <button id="btn-back" class="text-msblue">← Back</button>
+          <div>Question ${session.cursor + 1} / ${session.queue.length} <span class="ml-2 px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">Q #${q.id}</span></div>
+        </div>
+        <div class="mb-2 flex flex-wrap gap-1">
+          <span class="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700">${typeLabel}</span>
+          ${topic ? `<span class="text-xs px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200">${escapeHtml(topic.title)}</span>` : ''}
+        </div>`;
+    }
+
+    // -------- Practice dispatcher --------
+    function renderPractice() {
+      const root = document.getElementById('view-practice');
+      const qid = session.queue[session.cursor];
+      const q = QUESTIONS.find(x => x.id === qid);
+      if (!q) { finishSession(); return; }
+      try {
+        if (q.type === 'mc_single' || q.type === 'mc_multi') renderMC(q, root);
+        else if (q.type === 'sequence') renderSequence(q, root);
+        else if (q.type === 'hotspot')  renderHotspot(q, root);
+        else throw new Error('Unknown type ' + q.type);
+      } catch (e) {
+        console.error('Failed to render Q#' + q.id, e);
+        root.innerHTML = `
+          ${commonHeader(q)}
+          <div class="bg-red-50 dark:bg-red-900/30 rounded-lg p-4 border border-red-300 dark:border-red-800">
+            <div class="font-semibold text-red-700 dark:text-red-300 mb-2">This question failed to render</div>
+            <pre class="text-xs">${escapeHtml(e.message)}</pre>
+            <button id="btn-skip" class="w-full mt-3 px-4 py-3 bg-msblue text-white rounded font-semibold">Skip →</button>
+          </div>`;
+        document.getElementById('btn-skip').addEventListener('click', advance);
+      }
+      document.getElementById('btn-back')?.addEventListener('click', () => { showView('home'); renderHome(); });
+    }
+
+    // -------- MC renderer / grader --------
+    function renderMC(q, root) {
+      const isMulti = q.type === 'mc_multi';
+      const optsHtml = q.options.map(opt => `
+        <button class="opt-btn w-full text-left p-3 mb-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-msblue active:bg-gray-100 dark:active:bg-gray-700"
+                data-opt="${opt.id}">
+          <span class="font-semibold mr-2">${opt.id}.</span>${escapeHtml(opt.text)}
+        </button>`).join('');
+      const submitBtn = isMulti ? `<button id="btn-submit" class="w-full mt-3 px-4 py-3 bg-msblue text-white rounded font-semibold disabled:opacity-50" disabled>Submit</button>` : '';
+
+      root.innerHTML = `
+        ${commonHeader(q)}
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <pre class="mb-4 text-sm">${escapeHtml(q.question)}</pre>
+          ${isMulti ? `<div class="text-sm text-gray-500 mb-2">Select all that apply (${q.correct.length} correct).</div>` : ''}
+          <div id="opts">${optsHtml}</div>
+          ${submitBtn}
+          <div id="feedback" class="mt-4"></div>
+        </div>`;
+
+      const selected = new Set();
+      root.querySelectorAll('[data-opt]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isMulti) {
+            const id = btn.dataset.opt;
+            if (selected.has(id)) { selected.delete(id); btn.classList.remove('bg-blue-100','dark:bg-blue-900/40'); }
+            else { selected.add(id); btn.classList.add('bg-blue-100','dark:bg-blue-900/40'); }
+            document.getElementById('btn-submit').disabled = selected.size === 0;
+          } else {
+            const picked = [btn.dataset.opt];
+            submitAnswer(q, picked, gradeMC(q, picked), () => markMCOpts(q, picked));
+          }
+        });
+      });
+      if (isMulti) {
+        document.getElementById('btn-submit').addEventListener('click', () => {
+          const picked = [...selected];
+          submitAnswer(q, picked, gradeMC(q, picked), () => markMCOpts(q, picked));
+        });
+      }
+    }
+    function markMCOpts(q, picked) {
+      document.querySelectorAll('[data-opt]').forEach(el => {
+        const id = el.dataset.opt;
+        el.disabled = true;
+        el.classList.remove('bg-blue-100','dark:bg-blue-900/40','hover:border-msblue','active:bg-gray-100','dark:active:bg-gray-700');
+        if (q.correct.includes(id)) {
+          el.classList.add('bg-green-100','dark:bg-green-900/40','border-green-400','dark:border-green-600');
+          el.insertAdjacentHTML('beforeend', ' <span class="text-green-700 dark:text-green-300">✓</span>');
+        } else if (picked.includes(id)) {
+          el.classList.add('bg-red-100','dark:bg-red-900/40','border-red-400','dark:border-red-600');
+          el.insertAdjacentHTML('beforeend', ' <span class="text-red-700 dark:text-red-300">✗</span>');
+        }
+      });
+      const submitBtn = document.getElementById('btn-submit');
+      if (submitBtn) submitBtn.style.display = 'none';
+    }
+    function gradeMC(q, picked) { return sameSet(picked, q.correct); }
+
+    // -------- Sequence renderer / grader --------
+    function renderSequence(q, root) {
+      let order = shuffle(q.items.map(i => i.id));
+      // Avoid presenting the already-correct order by accident.
+      if (gradeSequence(q, order) && order.length > 1) order = [order[1], order[0], ...order.slice(2)];
+      function paintList() {
+        return order.map((id, idx) => {
+          const item = q.items.find(i => i.id === id);
+          return `
+            <div class="seq-row flex items-center gap-2 p-2 mb-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800" data-id="${id}">
+              <div class="text-xs text-gray-500 w-6">${idx + 1}.</div>
+              <div class="seq-text flex-1 text-sm">${escapeHtml(item.text)}</div>
+              <button class="seq-up text-base px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 min-w-[44px] min-h-[44px] ${idx === 0 ? 'opacity-30' : ''}" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} aria-label="Move up">↑</button>
+              <button class="seq-down text-base px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 min-w-[44px] min-h-[44px] ${idx === order.length - 1 ? 'opacity-30' : ''}" data-idx="${idx}" ${idx === order.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>
+            </div>`;
+        }).join('');
+      }
+      root.innerHTML = `
+        ${commonHeader(q)}
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <pre class="mb-2 text-sm">${escapeHtml(q.question)}</pre>
+          <div class="text-sm text-gray-500 mb-2">Order the steps from first to last.</div>
+          <div id="seq-list">${paintList()}</div>
+          <button id="btn-submit" class="w-full mt-3 px-4 py-3 bg-msblue text-white rounded font-semibold">Submit</button>
+          <div id="feedback" class="mt-4"></div>
+        </div>`;
+      function rerender() { document.getElementById('seq-list').innerHTML = paintList(); wireBtns(); }
+      function wireBtns() {
+        document.querySelectorAll('.seq-up').forEach(b => b.addEventListener('click', () => {
+          const idx = +b.dataset.idx;
+          if (idx > 0) { [order[idx - 1], order[idx]] = [order[idx], order[idx - 1]]; rerender(); }
+        }));
+        document.querySelectorAll('.seq-down').forEach(b => b.addEventListener('click', () => {
+          const idx = +b.dataset.idx;
+          if (idx < order.length - 1) { [order[idx + 1], order[idx]] = [order[idx], order[idx + 1]]; rerender(); }
+        }));
+      }
+      wireBtns();
+      document.getElementById('btn-submit').addEventListener('click', () => {
+        const correct = gradeSequence(q, order);
+        submitAnswer(q, order, correct, () => {
+          document.querySelectorAll('.seq-row').forEach((row, idx) => {
+            const id = row.dataset.id;
+            const correctIdx = q.correct_order.indexOf(id);
+            if (correctIdx === idx) {
+              row.classList.add('bg-green-100','dark:bg-green-900/40','border-green-400');
+            } else {
+              row.classList.add('bg-red-100','dark:bg-red-900/40','border-red-400');
+              row.querySelector('.seq-text').insertAdjacentHTML('beforeend',
+                ` <span class="text-xs text-red-700 dark:text-red-300">(should be ${correctIdx + 1})</span>`);
+            }
+            row.querySelectorAll('button').forEach(b => b.disabled = true);
+          });
+          document.getElementById('btn-submit').style.display = 'none';
+        });
+      });
+    }
+    function gradeSequence(q, order) {
+      if (order.length !== q.correct_order.length) return false;
+      return order.every((id, idx) => id === q.correct_order[idx]);
+    }
+
+    // -------- Hotspot renderer / grader --------
+    function renderHotspot(q, root) {
+      const picks = {};
+      const blanksHtml = q.blanks.map(b => `
+        <div class="hot-row mb-2 p-2 rounded border border-gray-300 dark:border-gray-600" data-blank="${b.id}">
+          <label class="block text-sm font-medium mb-1">${escapeHtml(b.prompt)}</label>
+          <select class="hot-select w-full p-2 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600" data-blank="${b.id}">
+            <option value="">— select —</option>
+            ${b.options.map(o => `<option value="${o.id}">${escapeHtml(o.text)}</option>`).join('')}
+          </select>
+        </div>`).join('');
+      root.innerHTML = `
+        ${commonHeader(q)}
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <pre class="mb-2 text-sm">${escapeHtml(q.question)}</pre>
+          <div class="text-sm text-gray-500 mb-2">Choose the correct option for each.</div>
+          <div id="hot-list">${blanksHtml}</div>
+          <button id="btn-submit" class="w-full mt-3 px-4 py-3 bg-msblue text-white rounded font-semibold disabled:opacity-50" disabled>Submit</button>
+          <div id="feedback" class="mt-4"></div>
+        </div>`;
+      document.querySelectorAll('.hot-select').forEach(sel => {
+        sel.addEventListener('change', () => {
+          picks[sel.dataset.blank] = sel.value;
+          document.getElementById('btn-submit').disabled = !q.blanks.every(b => picks[b.id]);
+        });
+      });
+      document.getElementById('btn-submit').addEventListener('click', () => {
+        const correct = gradeHotspot(q, picks);
+        submitAnswer(q, picks, correct, () => {
+          document.querySelectorAll('.hot-row').forEach(row => {
+            const blank = q.blanks.find(b => b.id === row.dataset.blank);
+            row.querySelector('.hot-select').disabled = true;
+            if (picks[blank.id] === blank.correct) {
+              row.classList.add('bg-green-100','dark:bg-green-900/40','border-green-400');
+            } else {
+              row.classList.add('bg-red-100','dark:bg-red-900/40','border-red-400');
+              const correctOpt = blank.options.find(o => o.id === blank.correct);
+              row.insertAdjacentHTML('beforeend',
+                `<div class="text-xs text-red-700 dark:text-red-300 mt-1">Correct: ${escapeHtml(correctOpt ? correctOpt.text : '(missing)')}</div>`);
+            }
+          });
+          document.getElementById('btn-submit').style.display = 'none';
+        });
+      });
+    }
+    function gradeHotspot(q, picks) { return q.blanks.every(b => picks[b.id] === b.correct); }
+
+    // -------- Shared submission --------
+    function submitAnswer(q, picked, correct, onMarked) {
+      const state = loadState();
+      const prev = state.results[q.id] || { attempts: 0 };
+      state.results[q.id] = { lastAnswer: picked, correct, attempts: (prev.attempts || 0) + 1, ts: Date.now() };
+      const idx = state.wrongQueue.indexOf(q.id);
+      if (correct && idx !== -1) state.wrongQueue.splice(idx, 1);
+      if (!correct && idx === -1) state.wrongQueue.push(q.id);
+      saveState(state);
+      session.score[correct ? 'right' : 'wrong']++;
+
+      onMarked();
+
+      const safeUrl = q.source && /^https?:\/\//.test(q.source.url) ? q.source.url : '';
+      const sourceLink = q.source ? `
+        <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+          📚 <span class="font-medium">${escapeHtml(q.source.path)}</span> → ${escapeHtml(q.source.module)} → ${escapeHtml(q.source.unit)}
+          ${safeUrl ? `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="text-msblue underline ml-1">Open in Microsoft Learn ↗</a>` : ''}
+        </div>` : '';
+      document.getElementById('feedback').innerHTML = `
+        <div class="rounded-lg p-3 ${correct ? 'bg-green-50 dark:bg-green-900/30 text-green-900 dark:text-green-100' : 'bg-red-50 dark:bg-red-900/30 text-red-900 dark:text-red-100'}">
+          <div class="font-semibold mb-2">${correct ? 'Correct' : 'Wrong'}</div>
+          <pre class="text-sm">${escapeHtml(q.explanation || '')}</pre>
+          ${sourceLink}
+        </div>
+        <button id="btn-next" class="w-full mt-3 px-4 py-3 bg-msblue text-white rounded font-semibold">Next →</button>`;
+      document.getElementById('btn-next').addEventListener('click', advance);
+      document.getElementById('btn-next').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function advance() {
+      session.cursor++;
+      if (session.cursor >= session.queue.length) finishSession();
+      else { renderPractice(); window.scrollTo(0, 0); }
+    }
+
+    function finishSession() { showView('results'); renderResults(); }
+
+    function renderResults() {
+      const root = document.getElementById('view-results');
+      const total = session.score.right + session.score.wrong;
+      const pct = total === 0 ? 0 : Math.round((session.score.right / total) * 100);
+      const state = loadState();
+      const sessionWrongIds = session.queue.filter(qid => { const r = state.results[qid]; return r && !r.correct; });
+      const wrongBtn = sessionWrongIds.length > 0
+        ? `<button id="btn-redo-wrong" class="w-full mt-2 px-4 py-3 bg-red-600 text-white rounded font-semibold">Practice wrong answers (${sessionWrongIds.length})</button>`
+        : '';
+      const heading = session.mode === 'topic'
+        ? `Topic complete — ${TOPICS.find(t => t.id === session.topicId)?.title || ''}`
+        : session.mode === 'mixed' ? 'Mixed session complete'
+        : session.mode === 'unseen' ? 'Unanswered session complete'
+        : 'Wrong-queue session complete';
+      const passHint = pct >= 70 ? 'At or above the 700/1000 pass line.' : 'Below the 700/1000 pass line — drill the wrong answers.';
+      root.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 text-center">
+          <h2 class="text-xl font-bold mb-2">${heading}</h2>
+          <p class="text-3xl font-bold text-msblue my-3">${session.score.right} / ${total}</p>
+          <p class="text-gray-600 dark:text-gray-400 mb-1">${pct}% correct</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">${passHint}</p>
+          ${wrongBtn}
+          <button id="btn-home-from-results" class="w-full mt-2 px-4 py-3 bg-gray-200 dark:bg-gray-700 rounded font-semibold">Back to topics</button>
+        </div>`;
+      document.getElementById('btn-home-from-results').addEventListener('click', () => { showView('home'); renderHome(); });
+      document.getElementById('btn-redo-wrong')?.addEventListener('click', () => newSession(session.mode, session.topicId, shuffle(sessionWrongIds)));
+    }
+
+    // -------- Reset --------
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('Wipe all progress?')) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        memoryState = null;
+        showView('home'); renderHome();
+      }
+    });
+
+    renderHome();
+  </script>
+</body></html>

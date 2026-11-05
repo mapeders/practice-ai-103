@@ -1,0 +1,206 @@
+{
+  "computer-vision": {
+    "path": "Develop computer vision solutions with Microsoft Foundry",
+    "path_url": "https://learn.microsoft.com/en-us/training/paths/develop-computer-vision-with-foundry/",
+    "modules": [
+      {
+        "module": "Develop a vision-enabled generative AI application",
+        "base": "https://learn.microsoft.com/en-us/training/modules/develop-generative-ai-vision-apps/",
+        "units": [
+          "2-deploy-multimodal-model",
+          "3-develop-visual-chat-app",
+          "4-exercise"
+        ]
+      },
+      {
+        "module": "Generate images with AI",
+        "base": "https://learn.microsoft.com/en-us/training/modules/generate-images-azure-openai/",
+        "units": [
+          "2-what-is-dall-e",
+          "3-dall-e-in-openai-studio",
+          "4-dall-e-rest-api",
+          "5-exercise-use-dall-e"
+        ]
+      },
+      {
+        "module": "Generate videos with Microsoft Foundry",
+        "base": "https://learn.microsoft.com/en-us/training/modules/generate-video-with-foundry/",
+        "units": [
+          "2-deploy-video-model",
+          "3-generate-video-from-prompt",
+          "4-generate-video-in-python",
+          "5-exercise"
+        ]
+      },
+      {
+        "module": "Analyze images with Content Understanding",
+        "base": "https://learn.microsoft.com/en-us/training/modules/analyze-images-with-content-understanding/",
+        "units": [
+          "2-what-is-content-understanding",
+          "3-analyze-images-with-content-understanding",
+          "4-exercise"
+        ]
+      }
+    ],
+    "docs": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/dall-e",
+      "https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/video-generation",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/standard-pro-modes",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/video/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/image/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-image",
+      "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/gpt-with-vision",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/agentic-mode",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/quickstart/use-rest-api"
+    ]
+  },
+  "text-analysis": {
+    "path": "Develop natural language solutions in Azure",
+    "path_url": "https://learn.microsoft.com/en-us/training/paths/develop-language-solutions-azure-ai/",
+    "modules": [
+      {
+        "module": "Analyze text with Azure Language in Foundry Tools",
+        "base": "https://learn.microsoft.com/en-us/training/modules/analyze-text-ai-language/",
+        "units": [
+          "2-provision-resource",
+          "3-detect-language",
+          "6-extract-entities",
+          "7-extract-personal-information",
+          "8-exercise-analyze-text"
+        ]
+      },
+      {
+        "module": "Develop a text analysis agent with the Azure Language MCP server",
+        "base": "https://learn.microsoft.com/en-us/training/modules/develop-text-analysis-agent-language-mcp/",
+        "units": [
+          "02-understand-language-mcp",
+          "03-connect-use-language-mcp",
+          "04-exercise"
+        ]
+      },
+      {
+        "module": "Develop a speech-capable generative AI application",
+        "base": "https://learn.microsoft.com/en-us/training/modules/develop-generative-ai-audio-apps/",
+        "units": [
+          "2-deploy-multimodal-model",
+          "3-develop-audio-chat-app",
+          "3b-develop-speech-app",
+          "4-exercise"
+        ]
+      },
+      {
+        "module": "Create speech-enabled apps with Azure Speech in Microsoft Foundry Tools",
+        "base": "https://learn.microsoft.com/en-us/training/modules/create-speech-enabled-apps/",
+        "units": [
+          "2-create-speech-service",
+          "3-speech-to-text",
+          "4-text-to-speech",
+          "5-audio-format-voices",
+          "6-speech-synthesis-markup",
+          "7-exercise-speech-app"
+        ]
+      },
+      {
+        "module": "Develop a speech agent with the Azure Speech MCP server",
+        "base": "https://learn.microsoft.com/en-us/training/modules/develop-speech-agent-speech-mcp/",
+        "units": [
+          "02-understand-speech-mcp",
+          "03-connect-use-speech-mcp",
+          "04-exercise"
+        ]
+      },
+      {
+        "module": "Develop an Azure Speech Voice Live Agent in Microsoft Foundry",
+        "base": "https://learn.microsoft.com/en-us/training/modules/develop-voice-live-agent/",
+        "units": [
+          "2-voice-live-api",
+          "3-voice-live-sdk",
+          "3b-voice-live-agent",
+          "4-exercise-develop-agent"
+        ]
+      },
+      {
+        "module": "Translate text and speech with Microsoft Foundry Tools",
+        "base": "https://learn.microsoft.com/en-us/training/modules/translate-text-speech/",
+        "units": [
+          "2-translation-foundry",
+          "3-azure-translator",
+          "4-speech-translation",
+          "5-exercise-translate"
+        ]
+      }
+    ],
+    "docs": [
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/sentiment-opinion-mining/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/language-service/summarization/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/custom-speech-overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation-overview"
+    ]
+  },
+  "information-extraction": {
+    "path": "Extract insights from visual data on Azure",
+    "path_url": "https://learn.microsoft.com/en-us/training/paths/insight-visual-data/",
+    "modules": [
+      {
+        "module": "Create a multimodal analysis solution with Azure Content Understanding",
+        "base": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai/",
+        "units": [
+          "02-content-understanding",
+          "03-create-analyzer",
+          "04-use-api",
+          "05-exercise"
+        ]
+      },
+      {
+        "module": "Create an Azure Content Understanding client application",
+        "base": "https://learn.microsoft.com/en-us/training/modules/analyze-content-ai-api/",
+        "units": [
+          "02-prepare-content-understanding",
+          "03-create-analyzer",
+          "04-analyze",
+          "05-exercise"
+        ]
+      },
+      {
+        "module": "Extract data with Azure Document Intelligence",
+        "base": "https://learn.microsoft.com/en-us/training/modules/extract-data-with-document-intelligence/",
+        "units": [
+          "2-what-is-document-intelligence",
+          "3-use-document-intelligence-studio",
+          "4-use-prebuilt-models",
+          "5-train-custom-models",
+          "6-exercise"
+        ]
+      },
+      {
+        "module": "Create a knowledge mining solution with Azure AI Search",
+        "base": "https://learn.microsoft.com/en-us/training/modules/ai-knowldge-mining/",
+        "units": [
+          "2-azure-ai-search",
+          "3-index",
+          "4-ai-skills",
+          "5-search-index",
+          "6-knowledge-store",
+          "7-exercise"
+        ]
+      }
+    ],
+    "docs": [
+      "https://learn.microsoft.com/en-us/azure/search/vector-search-overview",
+      "https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview",
+      "https://learn.microsoft.com/en-us/azure/search/semantic-search-overview",
+      "https://learn.microsoft.com/en-us/azure/search/vector-search-integrated-vectorization",
+      "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr",
+      "https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-content-understanding",
+      "https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-web-api",
+      "https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/document/overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/analyzer-templates",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/prebuilt-analyzers"
+    ]
+  }
+}
