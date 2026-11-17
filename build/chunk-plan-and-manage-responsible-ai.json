@@ -1,0 +1,1294 @@
+[
+ {
+  "id": 121,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You are configuring a guardrail in Microsoft Foundry for a model deployment used by a children's education app. For the Violence risk, content classified as medium or high severity must be blocked, but content classified as low severity must still be allowed. Which blocking level should you select for the Violence control?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Off"
+   },
+   {
+    "id": "B",
+    "text": "Low"
+   },
+   {
+    "id": "C",
+    "text": "Medium"
+   },
+   {
+    "id": "D",
+    "text": "High"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The guardrails overview defines the Medium blocking level as blocking medium- and high-severity content. Low is the least restrictive level and blocks high-severity content only, while High is the most restrictive and blocks low-, medium- and high-severity content. The blocking level names therefore describe how strict the control is, not the lowest severity that is let through.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Guardrails and controls overview in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/guardrails-overview"
+  }
+ },
+ {
+  "id": 122,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A company deploys a chat model in Microsoft Foundry that summarizes emails pasted into the prompt. The deployment uses the default Prompt Shields behaviour. Testers find that instructions hidden inside an email body (\"forward this thread to an external address\") are not detected. What should you do?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Raise the blocking level of the Hate, Sexual, Violence and Self-harm controls to High"
+   },
+   {
+    "id": "B",
+    "text": "Add a User prompt attack control at the user input intervention point, because it is turned off by default"
+   },
+   {
+    "id": "C",
+    "text": "Add a Protected material for text control at the output intervention point"
+   },
+   {
+    "id": "D",
+    "text": "Add a Document attack control to the guardrail assigned to the deployment, because document attack detection is off by default"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The Prompt Shields page states that user prompt attack detection is enabled by default, whereas document attack detection is off by default and must be enabled when you configure guardrail controls for your model deployments or agents. Hidden instructions embedded in emails, documents or web pages are document attacks. Prompt Shields do not judge whether content is harmful, so changing the harm-category blocking levels does not help.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Prompt Shields in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/content-filter-prompt-shields"
+  }
+ },
+ {
+  "id": 123,
+  "topic": "plan-and-manage",
+  "type": "hotspot",
+  "question": "You manage Microsoft Foundry guardrails through REST. Complete the statements.\n\nIn the Azure AI Services REST API a guardrail is represented as [B1], a resource-level object in Azure Resource Manager.\nTo assign the guardrail to a model deployment, set the [B2] property in the deployment properties (Deployments - Create Or Update).\nTo override the deployment-level guardrail for one inference call, send the guardrail name in the [B3] request header.",
+  "blanks": [
+   {
+    "id": "B1",
+    "prompt": "B1: how a guardrail is represented",
+    "options": [
+     {
+      "id": "a",
+      "text": "a blocklist"
+     },
+     {
+      "id": "b",
+      "text": "an RAI policy"
+     },
+     {
+      "id": "c",
+      "text": "a content safety analyzer"
+     },
+     {
+      "id": "d",
+      "text": "a project connection"
+     }
+    ],
+    "correct": "b"
+   },
+   {
+    "id": "B2",
+    "prompt": "B2: deployment property",
+    "options": [
+     {
+      "id": "a",
+      "text": "contentFilterId"
+     },
+     {
+      "id": "b",
+      "text": "guardrailName"
+     },
+     {
+      "id": "c",
+      "text": "raiPolicyName"
+     },
+     {
+      "id": "d",
+      "text": "safetyProfile"
+     }
+    ],
+    "correct": "c"
+   },
+   {
+    "id": "B3",
+    "prompt": "B3: request header",
+    "options": [
+     {
+      "id": "a",
+      "text": "x-policy-id"
+     },
+     {
+      "id": "b",
+      "text": "x-ms-guardrail"
+     },
+     {
+      "id": "c",
+      "text": "api-key"
+     },
+     {
+      "id": "d",
+      "text": "x-content-filter"
+     }
+    ],
+    "correct": "a"
+   }
+  ],
+  "explanation": "The how-to page says that in the Azure AI Services REST API a guardrail is represented as a RAI policy, that you assign it by setting the raiPolicyName property on a deployment, and that a custom guardrail can be specified at request time with the x-policy-id header, which overrides the deployment-level configuration for that API call. If the named configuration does not exist the service returns an InvalidContentFilterPolicy error.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "How to configure guardrails and controls in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails"
+  }
+ },
+ {
+  "id": 124,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You call a Microsoft Foundry model deployment through the Chat Completions API and include retrieved document text in the user message. A Document attack (indirect attack) control is enabled in the guardrail, but you want the safety system to distinguish the document text from the user's own input. How should you embed the document content?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Put the document text in the system message together with the trusted instructions"
+   },
+   {
+    "id": "B",
+    "text": "Enclose the document text in the delimiter \"\"\" <documents> ... </documents> \"\"\" inside the user message and JSON-escape the content"
+   },
+   {
+    "id": "C",
+    "text": "Send the document text as a separate message that has the role assistant"
+   },
+   {
+    "id": "D",
+    "text": "Base64-encode the document text and append it to the end of the user message without any markers"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The how-to page states that when you embed document content in a Chat Completions message you enclose it in the \"\"\" <documents> ... </documents> \"\"\" delimiter, that indirect prompt attack detection depends on this delimiter to tell document content from direct user input, and that unvetted document content should be JSON-escaped. The same page says to keep trusted system instructions in their designated role and not to concatenate them with document content.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "How to configure guardrails and controls in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails"
+  }
+ },
+ {
+  "id": 125,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "You are designing a guardrail in Microsoft Foundry that will be assigned to both a model deployment and an agent built with Foundry Agent Service. Which TWO intervention points apply only to the agent and are not run for the model deployment?",
+  "options": [
+   {
+    "id": "A",
+    "text": "User input"
+   },
+   {
+    "id": "B",
+    "text": "Tool call"
+   },
+   {
+    "id": "C",
+    "text": "Output"
+   },
+   {
+    "id": "D",
+    "text": "Tool response"
+   }
+  ],
+  "correct": [
+   "B",
+   "D"
+  ],
+  "explanation": "The guardrails overview lists four intervention points: user input, tool call (preview), tool response (preview) and output. Its applicability table shows that tool call and tool response apply to agents only, while user input and output apply to both models and agents. Controls that use agent-only intervention points are simply not run on models that share the guardrail.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Guardrails and controls overview in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/guardrails-overview"
+  }
+ },
+ {
+  "id": 126,
+  "topic": "plan-and-manage",
+  "type": "sequence",
+  "question": "You need to create a custom guardrail in the Microsoft Foundry portal and apply it to an existing agent. Arrange the wizard actions in the correct order.",
+  "items": [
+   {
+    "id": "S3",
+    "text": "Select Next, then use Add agents to select the agent the guardrail is assigned to"
+   },
+   {
+    "id": "S1",
+    "text": "In the project, select Build, open the Guardrails page and select Create Guardrail"
+   },
+   {
+    "id": "S5",
+    "text": "Select Create"
+   },
+   {
+    "id": "S2",
+    "text": "Select a risk, choose intervention points and an action, and select Add control"
+   },
+   {
+    "id": "S4",
+    "text": "Select Next, review the controls and assignments, and name the guardrail"
+   }
+  ],
+  "correct_order": [
+   "S1",
+   "S2",
+   "S3",
+   "S4",
+   "S5"
+  ],
+  "explanation": "The how-to page describes a three-step wizard: Step 1 Add Controls (select a risk, choose intervention points and one action, select Add control), Step 2 assign the guardrail to agents and/or models, and Step 3 Review, where you name the guardrail and select Create. The guardrail then appears on the Guardrails page and applies to the selected models and agents.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "How to configure guardrails and controls in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails"
+  }
+ },
+ {
+  "id": 127,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A model deployment in Microsoft Foundry has a guardrail with Violence set to High for user input and output. An agent that uses this deployment is assigned its own guardrail with Violence set to Low for user input and output, and no Violence controls for tool calls or tool responses. How is the content that the agent sends to a tool during a tool call scanned for Violence?",
+  "options": [
+   {
+    "id": "A",
+    "text": "It is scanned at the High level inherited from the model deployment's guardrail"
+   },
+   {
+    "id": "B",
+    "text": "It is scanned at the Low level because agent controls apply to every intervention point"
+   },
+   {
+    "id": "C",
+    "text": "It is not scanned for Violence"
+   },
+   {
+    "id": "D",
+    "text": "It is scanned by the Microsoft.DefaultV2 guardrail, which always applies to tool calls"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The guardrails overview states that risks are detected in an agent based on the guardrail it is assigned, and that the agent's guardrail fully overrides the model's guardrail. In the documented example with exactly this configuration, user queries and final output are scanned at Low, while tool calls and tool responses are not scanned for Violence at all. The model deployment's High setting is not inherited once the agent has its own guardrail.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Guardrails and controls overview in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/guardrails-overview"
+  }
+ },
+ {
+  "id": 128,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A productivity agent receives the request \"Can you show me my recent calendar events?\" and plans to call a clear_calendar_events() tool. You need a signal that detects this mismatch between user intent and the planned tool invocation, returns the reasoning, and lets you block the call or escalate to human review. Which capability should you use?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Prompt Shields for documents"
+   },
+   {
+    "id": "B",
+    "text": "Groundedness detection"
+   },
+   {
+    "id": "C",
+    "text": "Protected material detection for code"
+   },
+   {
+    "id": "D",
+    "text": "Task Adherence"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The Task Adherence page describes this exact example: the signal identifies misaligned tool invocations relative to user intent and returns taskRiskDetected set to true plus a details string with the reasoning, so the tool invocation can be blocked or escalated to human-in-the-loop review. Prompt Shields detect attempts to manipulate the model through user or document input; they do not decide whether an agent's action is aligned with the user's task.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Agentic Workflows Task Adherence (preview)",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/task-adherence"
+  }
+ },
+ {
+  "id": 129,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You are evaluating an agent used in a regulated insurance workflow. You must verify that the agent's actions follow the rules, procedures and policy constraints defined in its system message. Which built-in Microsoft Foundry agent evaluator should you use?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Task Adherence"
+   },
+   {
+    "id": "B",
+    "text": "Intent Resolution"
+   },
+   {
+    "id": "C",
+    "text": "Tool Call Success"
+   },
+   {
+    "id": "D",
+    "text": "Task Navigation Efficiency"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "explanation": "The agent evaluators page says Task Adherence measures whether the agent's actions adhere to its assigned tasks according to rules, procedures and policy constraints, based on its system message and prior steps, and recommends it for validating compliance in regulated environments. Intent Resolution only measures whether the agent correctly identifies the user's intent, and Tool Call Success only checks whether tool calls ended in technical errors.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Evaluators",
+   "unit": "Agent Evaluators for Generative AI",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators"
+  }
+ },
+ {
+  "id": 130,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You run the builtin.violence evaluator in Microsoft Foundry with the default threshold. For one response the evaluator returns a severity score of 4. What is the result for that row?",
+  "options": [
+   {
+    "id": "A",
+    "text": "pass, because only scores of 6 or 7 fail"
+   },
+   {
+    "id": "B",
+    "text": "fail, because the score is greater than the default threshold of 3"
+   },
+   {
+    "id": "C",
+    "text": "pass, because the score is below the default threshold of 5"
+   },
+   {
+    "id": "D",
+    "text": "fail, because any score other than 0 fails"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The risk and safety evaluators page states that content safety evaluators use a 0-7 severity scale and, given a numerical threshold (default 3), output pass if the score is less than or equal to the threshold and fail otherwise. A score of 4 falls in the Medium (4-5) band and exceeds the default threshold, so the row fails.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Evaluators",
+   "unit": "Risk and Safety Evaluators for Generative AI",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/risk-safety-evaluators"
+  }
+ },
+ {
+  "id": 131,
+  "topic": "plan-and-manage",
+  "type": "hotspot",
+  "question": "You are defining testing criteria for a cloud evaluation of an agent in Microsoft Foundry. The evaluator must check whether the agent follows its instructions, using an LLM judge. Complete the configuration.\n\ntesting_criteria = [\n    {\n        \"type\": [B1],\n        \"name\": \"task_adherence\",\n        \"evaluator_name\": [B2],\n        \"initialization_parameters\": {[B3]: model_deployment},\n        \"data_mapping\": {\n            \"query\": [B4],\n            \"response\": \"{{item.response}}\",\n        },\n    },\n]",
+  "blanks": [
+   {
+    "id": "B1",
+    "prompt": "B1: criterion type",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"score_model\""
+     },
+     {
+      "id": "b",
+      "text": "\"string_check\""
+     },
+     {
+      "id": "c",
+      "text": "\"azure_ai_evaluator\""
+     },
+     {
+      "id": "d",
+      "text": "\"label_model\""
+     }
+    ],
+    "correct": "c"
+   },
+   {
+    "id": "B2",
+    "prompt": "B2: evaluator name",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"builtin.task_adherence\""
+     },
+     {
+      "id": "b",
+      "text": "\"TaskAdherenceEvaluator\""
+     },
+     {
+      "id": "c",
+      "text": "\"azureai.task_adherence\""
+     },
+     {
+      "id": "d",
+      "text": "\"builtin.intent_resolution\""
+     }
+    ],
+    "correct": "a"
+   },
+   {
+    "id": "B3",
+    "prompt": "B3: initialization parameter that names the judge model",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"model_config\""
+     },
+     {
+      "id": "b",
+      "text": "\"deployment_name\""
+     },
+     {
+      "id": "c",
+      "text": "\"judge_model\""
+     },
+     {
+      "id": "d",
+      "text": "\"azure_deployment\""
+     }
+    ],
+    "correct": "b"
+   },
+   {
+    "id": "B4",
+    "prompt": "B4: mapping to the query field of the test dataset",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"{{sample.output_text}}\""
+     },
+     {
+      "id": "b",
+      "text": "\"{{sample.output_items}}\""
+     },
+     {
+      "id": "c",
+      "text": "\"${data.query}\""
+     },
+     {
+      "id": "d",
+      "text": "\"{{item.query}}\""
+     }
+    ],
+    "correct": "d"
+   }
+  ],
+  "explanation": "The agent evaluators page shows the Task Adherence configuration with type azure_ai_evaluator, evaluator_name builtin.task_adherence, initialization_parameters containing deployment_name, and a data_mapping of query to {{item.query}}. The page explains that {{item.field_name}} references fields from your test dataset, whereas {{sample.output_text}} and {{sample.output_items}} reference the agent's generated output.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Evaluators",
+   "unit": "Agent Evaluators for Generative AI",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators"
+  }
+ },
+ {
+  "id": 132,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "You plan automated scans with the AI Red Teaming Agent in Microsoft Foundry. Which TWO risk categories are supported for agents only and are available only in cloud red teaming?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Prohibited actions"
+   },
+   {
+    "id": "B",
+    "text": "Code vulnerability"
+   },
+   {
+    "id": "C",
+    "text": "Sensitive data leakage"
+   },
+   {
+    "id": "D",
+    "text": "Protected Materials"
+   }
+  ],
+  "correct": [
+   "A",
+   "C"
+  ],
+  "explanation": "The AI Red Teaming Agent page lists prohibited actions, sensitive data leakage and task adherence as agents-only, cloud-only risk categories; agentic risk categories are only available in cloud red teaming to provide a minimally sandboxed environment. Code vulnerability and protected materials are supported for both models and agents, in local and cloud red teaming.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - AI red teaming",
+   "unit": "AI Red Teaming Agent",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/ai-red-teaming-agent"
+  }
+ },
+ {
+  "id": 133,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You add builtin.violence, builtin.self_harm and builtin.hate_unfairness to the testing criteria of a Microsoft Foundry evaluation. A colleague says each entry is missing the initialization parameter that names a judge model deployment. What should you tell them?",
+  "options": [
+   {
+    "id": "A",
+    "text": "They are right: every built-in evaluator requires deployment_name"
+   },
+   {
+    "id": "B",
+    "text": "They are right, but the parameter must name an Azure AI Content Safety resource instead of a model deployment"
+   },
+   {
+    "id": "C",
+    "text": "No change is needed: risk and safety evaluators use the hosted Foundry Evaluation service and don't require deployment_name"
+   },
+   {
+    "id": "D",
+    "text": "No change is needed, because risk and safety evaluators use the model deployment that is being evaluated as the judge"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The risk and safety evaluators page notes that these evaluators use the hosted Foundry Evaluation service and don't require a deployment_name initialization parameter; unlike LLM-as-judge evaluators such as coherence and fluency, they run against Microsoft's hosted safety models. The documented configuration example contains only type, name, evaluator_name and data_mapping.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Evaluators",
+   "unit": "Risk and Safety Evaluators for Generative AI",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/risk-safety-evaluators"
+  }
+ },
+ {
+  "id": 134,
+  "topic": "plan-and-manage",
+  "type": "sequence",
+  "question": "You have a prioritized list of potential harms for a generative AI solution and now need to measure them, following the Microsoft guidance for responsible generative AI. Arrange the actions in the correct order.",
+  "items": [
+   {
+    "id": "S2",
+    "text": "Submit the prompts to the system and retrieve the generated output"
+   },
+   {
+    "id": "S4",
+    "text": "Document the measurement results and share them with stakeholders"
+   },
+   {
+    "id": "S1",
+    "text": "Prepare a diverse selection of input prompts that are likely to result in each documented potential harm"
+   },
+   {
+    "id": "S3",
+    "text": "Apply pre-defined criteria to evaluate the output and categorize it by level of potential harm"
+   }
+  ],
+  "correct_order": [
+   "S1",
+   "S2",
+   "S3",
+   "S4"
+  ],
+  "explanation": "The Measure potential harms unit describes three steps: prepare a diverse selection of input prompts likely to result in each documented harm, submit the prompts and retrieve the generated output, and apply pre-defined criteria to evaluate and categorize the output. It then states that the results of the measurement process should be documented and shared with stakeholders.",
+  "source": {
+   "path": "Microsoft Learn training module",
+   "module": "Implement a responsible generative AI solution in Microsoft Foundry",
+   "unit": "Measure potential harms",
+   "url": "https://learn.microsoft.com/en-us/training/modules/responsible-ai-studio/4-measure-harms"
+  }
+ },
+ {
+  "id": 135,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You use the Task Navigation Efficiency evaluator for regression testing of an agent. Every expected tool step must appear in the agent's trajectory in the correct order, but extra steps taken by the agent are acceptable. Which matching_mode should you configure?",
+  "options": [
+   {
+    "id": "A",
+    "text": "exact_match"
+   },
+   {
+    "id": "B",
+    "text": "any_order_match"
+   },
+   {
+    "id": "C",
+    "text": "in_order_match"
+   },
+   {
+    "id": "D",
+    "text": "subset_match"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The agent evaluators page lists three matching modes: exact_match (trajectory must match the ground truth exactly in order and content), in_order_match (all ground truth steps must appear in the correct order, extra steps allowed) and any_order_match (all ground truth steps must appear, order doesn't matter, extra steps allowed). Only in_order_match enforces order while tolerating extra steps.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Evaluators",
+   "unit": "Agent Evaluators for Generative AI",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators"
+  }
+ },
+ {
+  "id": 136,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You host a prompt agent in Microsoft Foundry and need traces of its runs for auditing as quickly as possible, without changing any application code. What should you do?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Install azure-monitor-opentelemetry in the client application and call configure_azure_monitor"
+   },
+   {
+    "id": "B",
+    "text": "Set the AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING environment variable to true in the client application"
+   },
+   {
+    "id": "C",
+    "text": "Decorate the agent's functions with @trace_function"
+   },
+   {
+    "id": "D",
+    "text": "Connect an Azure Monitor Application Insights resource to the Foundry project"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The tracing setup page recommends server-side tracing as the starting point: Foundry enables it automatically after you connect an Application Insights resource to your project, no code changes are required, and it works for any agent hosted in Foundry. The other options are client-side instrumentation steps, which you add only when you need visibility into your own application code.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Tracing",
+   "unit": "Set Up Tracing for AI Agents in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-setup"
+  }
+ },
+ {
+  "id": 137,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "An auditor must be able to query the agent telemetry that Microsoft Foundry stores for a project. The underlying Log Analytics tables are not configured as protected tables. Following least privilege, which role should you assign to the auditor on the connected Application Insights resource?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Privileged Monitoring Data Reader"
+   },
+   {
+    "id": "B",
+    "text": "Log Analytics Reader"
+   },
+   {
+    "id": "C",
+    "text": "Foundry Account Owner"
+   },
+   {
+    "id": "D",
+    "text": "Foundry Project Manager"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The tracing setup page lists the Log Analytics Reader role on the connected Application Insights resource as required to query telemetry. Privileged Monitoring Data Reader needs to be assigned in addition only if the underlying Log Analytics tables are protected, which is not the case here.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Tracing",
+   "unit": "Set Up Tracing for AI Agents in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-setup"
+  }
+ },
+ {
+  "id": 138,
+  "topic": "plan-and-manage",
+  "type": "hotspot",
+  "question": "You add client-side tracing to a Python agent application that uses the azure-ai-projects package. During a development test you also want message contents and tool call arguments to be captured in the built-in traces. Complete the code.\n\nimport os\n\nos.environ[[B1]] = \"true\"   # opt in to GenAI tracing\nos.environ[[B2]] = \"true\"   # record message content\n\nfrom azure.ai.projects.telemetry import [B3]\n\n[B3]().instrument()",
+  "blanks": [
+   {
+    "id": "B1",
+    "prompt": "B1: variable that enables GenAI tracing instrumentation",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"AZURE_TRACING_GEN_AI_INSTRUMENT_RESPONSES_API\""
+     },
+     {
+      "id": "b",
+      "text": "\"APPLICATIONINSIGHTS_CONNECTION_STRING\""
+     },
+     {
+      "id": "c",
+      "text": "\"AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING\""
+     },
+     {
+      "id": "d",
+      "text": "\"AZURE_TRACING_GEN_AI_INCLUDE_BINARY_DATA\""
+     }
+    ],
+    "correct": "c"
+   },
+   {
+    "id": "B2",
+    "prompt": "B2: variable that enables content recording",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT\""
+     },
+     {
+      "id": "b",
+      "text": "\"AZURE_TRACING_GEN_AI_INCLUDE_BINARY_DATA\""
+     },
+     {
+      "id": "c",
+      "text": "\"AZURE_TRACING_GEN_AI_TRACE_CONTEXT_PROPAGATION_INCLUDE_BAGGAGE\""
+     },
+     {
+      "id": "d",
+      "text": "\"AZURE_TRACING_GEN_AI_ENABLE_TRACE_CONTEXT_PROPAGATION\""
+     }
+    ],
+    "correct": "a"
+   },
+   {
+    "id": "B3",
+    "prompt": "B3: class that enables instrumentation",
+    "options": [
+     {
+      "id": "a",
+      "text": "AIProjectClient"
+     },
+     {
+      "id": "b",
+      "text": "ConsoleSpanExporter"
+     },
+     {
+      "id": "c",
+      "text": "TracerProvider"
+     },
+     {
+      "id": "d",
+      "text": "AIProjectInstrumentor"
+     }
+    ],
+    "correct": "d"
+   }
+  ],
+  "explanation": "The client-side tracing page says to set AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING to true before calling AIProjectInstrumentor().instrument(); otherwise instrumentation isn't enabled and a warning is logged. Content recording, which captures message contents and tool call arguments, is enabled with OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT and defaults to false. AZURE_TRACING_GEN_AI_INCLUDE_BINARY_DATA only adds image and file data to spans when content recording is already on.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Tracing",
+   "unit": "Add client-side tracing to Foundry agents",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-client-side"
+  }
+ },
+ {
+  "id": 139,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A Python agent application exports traces to Application Insights. Content recording is disabled (OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT is not set). A privacy review nevertheless finds customer account numbers in span attributes named code.function.parameter.account_id. What is the cause?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Trace context propagation is enabled by default and injects request parameters into spans"
+   },
+   {
+    "id": "B",
+    "text": "Server-side tracing always records tool arguments under code.function.parameter attributes"
+   },
+   {
+    "id": "C",
+    "text": "A custom function is decorated with @trace_function, which always traces parameters and return values regardless of the content recording setting"
+   },
+   {
+    "id": "D",
+    "text": "AZURE_TRACING_GEN_AI_INCLUDE_BINARY_DATA is set to true"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The client-side tracing page states that the content recording variable controls recording only for built-in traces. Functions decorated with @trace_function always have their parameters recorded as code.function.parameter.<name> and their return value as code.function.return.value, regardless of that setting. Trace context propagation only injects the W3C traceparent and tracestate headers into requests.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Tracing",
+   "unit": "Add client-side tracing to Foundry agents",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-client-side"
+  }
+ },
+ {
+  "id": 140,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "An agent in Foundry Agent Service calls downstream Azure resources by using its agent identity. Your security team needs to audit (1) which agent identity obtained a token for which resource, and (2) the individual tool calls made by each agent. Which TWO sources should the team use?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Microsoft Entra sign-in logs, filtered by agent type"
+   },
+   {
+    "id": "B",
+    "text": "Guardrail annotations returned in the content_filter_results of each response"
+   },
+   {
+    "id": "C",
+    "text": "Foundry tracing in the Application Insights resource connected to the project"
+   },
+   {
+    "id": "D",
+    "text": "Microsoft Entra audit logs"
+   }
+  ],
+  "correct": [
+   "A",
+   "C"
+  ],
+  "explanation": "The agent identity page says Microsoft Entra sign-in logs show which agent identity obtained a token for which resource (including on behalf of which user for delegated access), and that with tracing enabled you can inspect tool calls per agent in the Application Insights resource connected to the Foundry project. Microsoft Entra audit logs instead record blueprint and agent identity creation and deletion events.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Concepts",
+   "unit": "Agent identity concepts in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity"
+  }
+ },
+ {
+  "id": 141,
+  "topic": "plan-and-manage",
+  "type": "sequence",
+  "question": "You are implementing a human approval workflow for a Foundry Agent Service prompt agent that uses a remote MCP server. Every MCP tool call must be reviewed by a person before it runs. Arrange the actions in the correct order.",
+  "items": [
+   {
+    "id": "S4",
+    "text": "Send a new responses.create request in the same conversation whose input contains an mcp_approval_response item with approval_request_id set to the request item's id and approve set to true or false"
+   },
+   {
+    "id": "S2",
+    "text": "Create a conversation and send the user's request with responses.create"
+   },
+   {
+    "id": "S5",
+    "text": "Read the final response text returned by the agent"
+   },
+   {
+    "id": "S1",
+    "text": "Create the agent version with an MCP tool that has require_approval set to always"
+   },
+   {
+    "id": "S3",
+    "text": "Find the output item of type mcp_approval_request and show the reviewer the server label, tool name and arguments"
+   }
+  ],
+  "correct_order": [
+   "S1",
+   "S2",
+   "S3",
+   "S4",
+   "S5"
+  ],
+  "explanation": "The MCP tool page's connect-and-approve route configures the MCP tool with require_approval set to always, sends the request in a conversation, inspects response.output for items of type mcp_approval_request (reviewing server, tool and arguments), and then submits an mcp_approval_response with the request item's id as approval_request_id in the same conversation so the agent can continue. The page also recommends logging approvals and tool calls for auditing.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Tools",
+   "unit": "Connect agents to MCP server endpoints",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol"
+  }
+ },
+ {
+  "id": 142,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You review agent traces in Application Insights for an audit and need to find the exact arguments that an agent passed to a tool. According to the OpenTelemetry GenAI conventions that Microsoft Foundry uses for agent observability, where is this recorded?",
+  "options": [
+   {
+    "id": "A",
+    "text": "In the gen_ai.tool.definitions attribute of the invoke_agent span"
+   },
+   {
+    "id": "B",
+    "text": "In the gen_ai.tool.call.arguments attribute of the execute_tool span"
+   },
+   {
+    "id": "C",
+    "text": "In the gen_ai.tool.call.result attribute of the execute_tool span"
+   },
+   {
+    "id": "D",
+    "text": "In the plan child span of the invoke_workflow span"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The agent tracing overview lists execute_tool as the child span that records a tool execution, with the gen_ai.tool.call.arguments attribute recording the arguments passed to the tool call and gen_ai.tool.call.result recording the result of a successful call. gen_ai.tool.definitions on invoke_agent only records the definitions of the tools available to the agent, not what was passed in a specific call.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Tracing",
+   "unit": "Agent tracing overview",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept"
+  }
+ },
+ {
+  "id": 143,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A developer attaches a remote MCP server to a Foundry Agent Service agent. To make sure the agent cannot use any of the server's tools until a security review is finished, the developer sets allowed_tools to an empty list ([]). What is the effect?",
+  "options": [
+   {
+    "id": "A",
+    "text": "The agent can access all tools exposed by the MCP server"
+   },
+   {
+    "id": "B",
+    "text": "The agent cannot access any tool on the MCP server"
+   },
+   {
+    "id": "C",
+    "text": "Agent creation fails with an \"Invalid tool schema\" error"
+   },
+   {
+    "id": "D",
+    "text": "The agent can access the tools, but each call requires approval regardless of require_approval"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "explanation": "The MCP tool page states that if you omit allowed_tools or set it to an empty list, the agent can access all tools exposed by the MCP server; an empty list means all tools, not zero tools. To restrict tool access you must provide a nonempty list of tool names. The \"Invalid tool schema\" error is documented for server definitions that use anyOf or allOf, not for an empty allowed_tools list.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Tools",
+   "unit": "Connect agents to MCP server endpoints",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol"
+  }
+ },
+ {
+  "id": 144,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "An agent in Foundry Agent Service uses an MCP server that exposes several read-only tools and two tools that change data: create_issue and delete_branch. A developer must approve every call to those two tools, while all other tools must run without approval. Which require_approval value should you configure on the MCP tool?",
+  "options": [
+   {
+    "id": "A",
+    "text": "\"always\""
+   },
+   {
+    "id": "B",
+    "text": "{\"never\": [\"create_issue\", \"delete_branch\"]}"
+   },
+   {
+    "id": "C",
+    "text": "\"never\""
+   },
+   {
+    "id": "D",
+    "text": "{\"always\": [\"create_issue\", \"delete_branch\"]}"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The MCP tool page lists the supported require_approval values: always (approval for every call, the default), never (no approval), {\"never\": [...]} to list tools that don't require approval, and {\"always\": [...]} to list tools that require approval. Listing the two write tools under always requires approval for exactly those tools, in line with the page's advice to require approval for high-risk operations that write data or change resources.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Tools",
+   "unit": "Connect agents to MCP server endpoints",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol"
+  }
+ },
+ {
+  "id": 145,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You create a new agent in Foundry Agent Service and configure a tool that uses agent identity authentication to read blobs from an Azure Storage account. The token is issued successfully, but the storage account denies access. What is the most likely cause?",
+  "options": [
+   {
+    "id": "A",
+    "text": "The agent identity blueprint has no client secret configured"
+   },
+   {
+    "id": "B",
+    "text": "A newly created agent identity starts without resource permissions, and no Azure RBAC role has been assigned to it on the storage resource"
+   },
+   {
+    "id": "C",
+    "text": "Agent identities can be used only for delegated (on-behalf-of-user) access, never for application-only access"
+   },
+   {
+    "id": "D",
+    "text": "The Foundry User role must be assigned to the storage account's managed identity"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The agent identity page states that a newly created agent identity starts without resource permissions and that Foundry doesn't automatically assign RBAC roles or other downstream permissions; you or an administrator must grant access through the target service's authorization model. Authentication to a resource doesn't itself grant access. No client secret or certificate is needed, because Foundry provisions a federated identity credential on the blueprint.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Concepts",
+   "unit": "Agent identity concepts in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity"
+  }
+ },
+ {
+  "id": 146,
+  "topic": "plan-and-manage",
+  "type": "hotspot",
+  "question": "You define an MCP tool in the REST definition of a Foundry Agent Service prompt agent. The agent may use only the search_issues tool, every call must be approved, and credentials must come from a project connection rather than being hard-coded. Complete the tool definition.\n\n{\n  \"type\": \"mcp\",\n  [B1]: \"github\",\n  \"server_url\": \"https://api.githubcopilot.com/mcp/\",\n  [B2]: [\"search_issues\"],\n  [B3]: \"always\",\n  [B4]: \"my-mcp-connection\"\n}",
+  "blanks": [
+   {
+    "id": "B1",
+    "prompt": "B1: unique identifier of this MCP server within the agent",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"server_label\""
+     },
+     {
+      "id": "b",
+      "text": "\"server_name\""
+     },
+     {
+      "id": "c",
+      "text": "\"connection_name\""
+     },
+     {
+      "id": "d",
+      "text": "\"tool_name\""
+     }
+    ],
+    "correct": "a"
+   },
+   {
+    "id": "B2",
+    "prompt": "B2: restricts which tools the agent can access",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"tool_choice\""
+     },
+     {
+      "id": "b",
+      "text": "\"enabled_tools\""
+     },
+     {
+      "id": "c",
+      "text": "\"allowed_tools\""
+     },
+     {
+      "id": "d",
+      "text": "\"tools\""
+     }
+    ],
+    "correct": "c"
+   },
+   {
+    "id": "B3",
+    "prompt": "B3: approval behaviour",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"approval_mode\""
+     },
+     {
+      "id": "b",
+      "text": "\"require_approval\""
+     },
+     {
+      "id": "c",
+      "text": "\"human_in_the_loop\""
+     },
+     {
+      "id": "d",
+      "text": "\"mcp_approval_request\""
+     }
+    ],
+    "correct": "b"
+   },
+   {
+    "id": "B4",
+    "prompt": "B4: reference to the stored authentication details",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"api_key\""
+     },
+     {
+      "id": "b",
+      "text": "\"authorization\""
+     },
+     {
+      "id": "c",
+      "text": "\"connection_string\""
+     },
+     {
+      "id": "d",
+      "text": "\"project_connection_id\""
+     }
+    ],
+    "correct": "d"
+   }
+  ],
+  "explanation": "The MCP tool page describes the mcp tool properties: server_url, server_label (a unique identifier of the MCP server to the agent), allowed_tools (an optional nonempty list restricts the agent to the named tools), require_approval (default always) and project_connection_id (the project connection that stores authentication and other connection details, used instead of hard-coding credentials). mcp_approval_request is the type of the response output item, not a tool property.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Tools",
+   "unit": "Connect agents to MCP server endpoints",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol"
+  }
+ },
+ {
+  "id": 147,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "An agent in Foundry Agent Service uses agent identity authentication for a tool that reads from a single Azure Storage account. You must grant access by using Azure RBAC while applying least privilege. Which TWO actions should you perform?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Use the object ID of the agent identity used for the tool call as the assignee of the role assignment"
+   },
+   {
+    "id": "B",
+    "text": "Assign the role at subscription scope so that the agent keeps working if the storage account is moved"
+   },
+   {
+    "id": "C",
+    "text": "Assign the role to the project managed identity instead of the agent identity"
+   },
+   {
+    "id": "D",
+    "text": "Assign the role at the storage resource or resource-group scope rather than subscription-wide"
+   }
+  ],
+  "correct": [
+   "A",
+   "D"
+  ],
+  "explanation": "The agent identity page says that when a tool uses agent identity authentication you grant access to the agent identity, using the object ID of the agent identity used for the tool call as the assignee, and that for Azure RBAC you should prefer a resource or resource-group scope over subscription-wide access. The project managed identity is granted access only for tool connections that use project managed identity authentication.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Concepts",
+   "unit": "Agent identity concepts in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity"
+  }
+ },
+ {
+  "id": 148,
+  "topic": "plan-and-manage",
+  "type": "sequence",
+  "question": "An agent in Foundry Agent Service calls an MCP server by using agent identity authentication. Arrange the stages of the runtime OAuth 2.0 token exchange in the order in which they occur.",
+  "items": [
+   {
+    "id": "S3",
+    "text": "Agent Service presents the agent identity token to Microsoft Entra ID and requests an access token scoped to the audience of the downstream service"
+   },
+   {
+    "id": "S1",
+    "text": "Agent Service presents the blueprint's credentials to Microsoft Entra ID"
+   },
+   {
+    "id": "S4",
+    "text": "Agent Service passes the scoped access token to the MCP server, and the downstream resource checks the agent identity's RBAC role assignments"
+   },
+   {
+    "id": "S2",
+    "text": "Microsoft Entra ID validates the blueprint credentials and issues a token for the specific agent identity"
+   }
+  ],
+  "correct_order": [
+   "S1",
+   "S2",
+   "S3",
+   "S4"
+  ],
+  "explanation": "The agent identity page describes four stages: blueprint authentication, agent identity token issuance, a scoped token request for the audience of the downstream service, and the authenticated tool call, where the downstream resource validates the token and checks the agent identity's RBAC role assignments before granting or denying access. Agent Service handles the whole exchange automatically.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Concepts",
+   "unit": "Agent identity concepts in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity"
+  }
+ },
+ {
+  "id": 149,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "Your organization runs agents built in Microsoft Foundry and in Microsoft Copilot Studio. Administrators want one tenant-wide inventory of these agents where they can apply Conditional Access policies and manage owners, sponsors and expiration for the agents' identities. Where should they do this?",
+  "options": [
+   {
+    "id": "A",
+    "text": "On the Guardrails page of each Foundry project"
+   },
+   {
+    "id": "B",
+    "text": "In the Access control (IAM) blade of each Foundry project"
+   },
+   {
+    "id": "C",
+    "text": "In the Microsoft Entra admin center"
+   },
+   {
+    "id": "D",
+    "text": "In the Application Insights resource connected to each Foundry project"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The agent identity page states that Foundry agent identities appear in the tenant-wide inventory in the Microsoft Entra admin center alongside identities from Microsoft Copilot Studio and other services, and that built-in controls such as Conditional Access, identity protection, network access and governance (expiration, owners and sponsors) can be enabled there. Guardrails control content risks for models and agents inside a project; they do not govern identities.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Concepts",
+   "unit": "Agent identity concepts in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity"
+  }
+ },
+ {
+  "id": 150,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You create an agent in Foundry Agent Service that uses a GPT-4o mini deployment. The deployment is assigned a custom guardrail named MyCustomGuardrails. You do not assign any guardrail to the agent. Which guardrail governs the agent?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Microsoft.DefaultV2, because agents without a custom guardrail always use the Microsoft default"
+   },
+   {
+    "id": "B",
+    "text": "No guardrail, until one is explicitly assigned to the agent"
+   },
+   {
+    "id": "C",
+    "text": "Both Microsoft.DefaultV2 and MyCustomGuardrails, with the stricter control winning for each risk"
+   },
+   {
+    "id": "D",
+    "text": "MyCustomGuardrails, because the agent inherits the guardrail of its underlying model deployment"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The guardrails overview states that if no custom guardrail is assigned, the agent inherits the guardrail of its underlying model deployment, and gives this exact example of an agent using \"MyCustomGuardrails\" until you assign a different guardrail. An agent only uses Microsoft.DefaultV2 if its model deployment uses that guardrail or if you explicitly assign it.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Guardrails and controls overview in Microsoft Foundry",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/guardrails/guardrails-overview"
+  }
+ }
+]

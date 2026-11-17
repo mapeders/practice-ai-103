@@ -1,4 +1,32 @@
 {
+  "plan-and-manage": {
+    "path": "Develop generative AI apps in Azure",
+    "path_url": "https://learn.microsoft.com/en-us/training/paths/create-custom-copilots-ai-studio/",
+    "modules": [],
+    "docs": [
+      "https://learn.microsoft.com/en-us/azure/foundry/guardrails/guardrails-overview",
+      "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/content-filter-prompt-shields",
+      "https://learn.microsoft.com/en-us/azure/foundry/guardrails/how-to-create-guardrails",
+      "https://learn.microsoft.com/en-us/azure/foundry/guardrails/task-adherence",
+      "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators",
+      "https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/risk-safety-evaluators",
+      "https://learn.microsoft.com/en-us/azure/foundry/concepts/ai-red-teaming-agent",
+      "https://learn.microsoft.com/en-us/training/modules/responsible-ai-studio/4-measure-harms",
+      "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-setup",
+      "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-client-side",
+      "https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity",
+      "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol",
+      "https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept",
+      "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/use-blocklists",
+      "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/content-filter-protected-material",
+      "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses",
+      "https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/run-scans-ai-red-teaming-agent",
+      "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard",
+      "https://learn.microsoft.com/en-us/training/modules/responsible-ai-studio/5-mitigate-harms",
+      "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/add-human-in-the-loop",
+      "https://learn.microsoft.com/en-us/agent-framework/agents/tools/tool-approval"
+    ]
+  },
   "computer-vision": {
     "path": "Develop computer vision solutions with Microsoft Foundry",
     "path_url": "https://learn.microsoft.com/en-us/training/paths/develop-computer-vision-with-foundry/",
@@ -53,7 +81,18 @@
       "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/gpt-with-vision",
       "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/agentic-mode",
       "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/overview",
-      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/quickstart/use-rest-api"
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/quickstart/use-rest-api",
+      "https://learn.microsoft.com/en-us/azure/foundry/guardrails/default-safety-policies",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-multimodal",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-jailbreak",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/region-availability",
+      "https://learn.microsoft.com/en-us/azure/foundry-classic/openai/concepts/content-filter-document-embedding",
+      "https://learn.microsoft.com/en-us/azure/foundry/guardrails/intervention-points",
+      "https://learn.microsoft.com/en-us/azure/foundry-classic/openai/concepts/content-credentials",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/provenance-detection",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/custom-categories-rapid",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/concepts/guardrails",
+      "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/custom-categories"
     ]
   },
   "text-analysis": {
@@ -138,7 +177,17 @@
       "https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs",
       "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/custom-speech-overview",
       "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview",
-      "https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation-overview"
+      "https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation-overview",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-custom-speech-evaluate-data",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-custom-speech-test-and-train",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-recognize-speech",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-translate-speech",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-use-live-interpreter",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/improve-accuracy-phrase-list",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/voice-live",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/voice-live-how-to",
+      "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/voice-live-how-to-customize",
+      "https://learn.microsoft.com/en-us/azure/foundry/openai/audio-completions-quickstart"
     ]
   },
   "information-extraction": {

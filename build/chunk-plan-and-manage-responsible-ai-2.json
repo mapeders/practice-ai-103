@@ -1,0 +1,397 @@
+[
+ {
+  "id": 186,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You created a custom blocklist of competitor names for an Azure OpenAI model deployment in Microsoft Foundry. You apply it to a content filter with a PUT request to .../raiPolicies/{raiPolicyName}. The documented request body lists the blocklist under \"completionBlocklists\". You need the blocklist to be applied to what users type instead of to what the model generates. What should you change?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Set \"blocking\" to false for the blocklist entry"
+   },
+   {
+    "id": "B",
+    "text": "Rename the \"completionBlocklists\" property to \"promptBlocklists\""
+   },
+   {
+    "id": "C",
+    "text": "Set \"isRegex\" to true on every blocklist item"
+   },
+   {
+    "id": "D",
+    "text": "Change \"basePolicyName\" from \"Microsoft.Default\" to the name of the blocklist"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "explanation": "The blocklists how-to shows the raiPolicies request body with a completionBlocklists array and says to change the \"completionBlocklists\" title to \"promptBlocklists\" if you want the blocklist to apply to user prompts instead of AI model completions. isRegex belongs to an individual blocklist item and only controls whether its pattern is a regex or an exact match.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "How to use block lists in Microsoft Foundry models",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/use-blocklists"
+  }
+ },
+ {
+  "id": 187,
+  "topic": "plan-and-manage",
+  "type": "hotspot",
+  "question": "You add a term to an existing custom blocklist for an Azure OpenAI resource by using the Azure Resource Manager REST API. The term must be matched as a regular expression. Complete the request.\n\nPUT https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CognitiveServices/accounts/{accountName}/[B1]/{blocklistName}/raiBlocklistItems/{itemName}?api-version=2024-10-01\n\n{\n  \"properties\": {\n    [B2]: \"proj(ect)?[- ]?falcon\",\n    [B3]: true\n  }\n}",
+  "blanks": [
+   {
+    "id": "B1",
+    "prompt": "B1: resource type segment for the blocklist",
+    "options": [
+     {
+      "id": "a",
+      "text": "raiPolicies"
+     },
+     {
+      "id": "b",
+      "text": "blocklists"
+     },
+     {
+      "id": "c",
+      "text": "raiBlocklists"
+     },
+     {
+      "id": "d",
+      "text": "contentFilters"
+     }
+    ],
+    "correct": "c"
+   },
+   {
+    "id": "B2",
+    "prompt": "B2: property that holds the term",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"pattern\""
+     },
+     {
+      "id": "b",
+      "text": "\"text\""
+     },
+     {
+      "id": "c",
+      "text": "\"term\""
+     },
+     {
+      "id": "d",
+      "text": "\"blockItem\""
+     }
+    ],
+    "correct": "a"
+   },
+   {
+    "id": "B3",
+    "prompt": "B3: property that marks the term as a regular expression",
+    "options": [
+     {
+      "id": "a",
+      "text": "\"regex\""
+     },
+     {
+      "id": "b",
+      "text": "\"isRegex\""
+     },
+     {
+      "id": "c",
+      "text": "\"exactMatch\""
+     },
+     {
+      "id": "d",
+      "text": "\"blocking\""
+     }
+    ],
+    "correct": "b"
+   }
+  ],
+  "explanation": "The blocklists how-to adds items with a PUT to .../raiBlocklists/{raiBlocklistName}/raiBlocklistItems/{raiBlocklistItemName} and a body whose properties contain \"pattern\" (maximum 1,000 characters) and \"isRegex\", which specifies whether the pattern is regex or exact match. raiPolicies is the content filter resource the blocklist is applied to, and \"blocking\" is a property of the blocklist reference inside that policy.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "How to use block lists in Microsoft Foundry models",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/use-blocklists"
+  }
+ },
+ {
+  "id": 188,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "A coding assistant built on a Microsoft Foundry model deployment uses the protected material code filter. A legal reviewer finds that a suggestion that closely matches code from a public GitHub repository created in 2025 was not flagged. What is the documented reason?",
+  "options": [
+   {
+    "id": "A",
+    "text": "The protected material code filter scans user prompts only, not model output"
+   },
+   {
+    "id": "B",
+    "text": "Protected material detection flags code only when it is longer than 200 characters"
+   },
+   {
+    "id": "C",
+    "text": "The protected material code filter requires a custom blocklist that lists the repositories to match"
+   },
+   {
+    "id": "D",
+    "text": "The Content Safety code scanner/indexer is only current through April 6, 2023, so code added to GitHub after that date isn't detected"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The protected material page cautions that the Content Safety service's code scanner/indexer is only current through April 6, 2023 and that code added to GitHub after this date won't be detected. The filter scans the output of large language models, and the 200-character threshold on the page applies to news and selected web content in the text filter, not to code.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Guardrails and controls",
+   "unit": "Protected Material Detection Filter",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/content-filter-protected-material"
+  }
+ },
+ {
+  "id": 189,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "Your Python application calls a Microsoft Foundry model deployment with client.responses.create(...) from the openai package. The request succeeds, and you need to log the guardrail annotations for the input and output. Where do you read them?",
+  "options": [
+   {
+    "id": "A",
+    "text": "From the top-level content_filters array, read through response.model_extra because the SDK has no typed property for it"
+   },
+   {
+    "id": "B",
+    "text": "From response.prompt_filter_results and response.choices[0].content_filter_results"
+   },
+   {
+    "id": "C",
+    "text": "From the x-policy-id response header"
+   },
+   {
+    "id": "D",
+    "text": "From error.code on the BadRequestError that is raised for every annotated response"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "explanation": "The Responses API page states that, instead of the prompt_filter_results and content_filter_results fields that chat completions return, the response object includes a top-level content_filters array. Because it is a Microsoft Foundry extension that isn't part of the base OpenAI response schema, the SDKs don't expose a typed property and the Python sample reads it with response.model_extra.get(\"content_filters\", []).",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Azure OpenAI in Foundry Models - How-to",
+   "unit": "Use the Azure OpenAI Responses API",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses"
+  }
+ },
+ {
+  "id": 190,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "You parse the content_filters array returned by the Responses API for a Microsoft Foundry model deployment. For each entry you must determine (1) whether the result applies to the input or to the output, and (2) whether the content was blocked. Which TWO fields should you read?",
+  "options": [
+   {
+    "id": "A",
+    "text": "finish_reason"
+   },
+   {
+    "id": "B",
+    "text": "source_type"
+   },
+   {
+    "id": "C",
+    "text": "prompt_index"
+   },
+   {
+    "id": "D",
+    "text": "blocked"
+   }
+  ],
+  "correct": [
+   "B",
+   "D"
+  ],
+  "explanation": "The Responses API page describes each content_filters entry: blocked says whether the content was blocked, source_type says whether the result applies to the prompt (input) or the completion (output), content_filter_results holds the category results, and content_filter_offsets holds the character offsets. In annotation mode a control can report a severity or detection while blocked and filtered remain false.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Azure OpenAI in Foundry Models - How-to",
+   "unit": "Use the Azure OpenAI Responses API",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses"
+  }
+ },
+ {
+  "id": 191,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You run a local scan with the AI Red Teaming Agent from the Azure AI Evaluation SDK:\n\nred_team_agent = RedTeam(azure_ai_project=azure_ai_project, credential=DefaultAzureCredential())\nresult = await red_team_agent.scan(target=simple_callback)\n\nNo attack_strategies argument is passed. Which prompts are sent to the target?",
+  "options": [
+   {
+    "id": "A",
+    "text": "The baseline prompts plus the EASY group of strategies (Base64, Flip and Morse)"
+   },
+   {
+    "id": "B",
+    "text": "The baseline prompts converted with every supported attack strategy"
+   },
+   {
+    "id": "C",
+    "text": "Only baseline direct adversarial queries"
+   },
+   {
+    "id": "D",
+    "text": "Nothing; scan() fails because attack_strategies is a required parameter"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "explanation": "The local red teaming how-to states that if only the target is passed and no attack strategies are specified, the red team agent sends only baseline direct adversarial queries to the target, and recommends trying this baseline first. attack_strategies is optional; groups such as AttackStrategy.EASY (Base64, Flip, Morse) are applied only when you pass them.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - AI red teaming",
+   "unit": "Run AI Red Teaming Agent Locally (Azure AI Evaluation SDK)",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/run-scans-ai-red-teaming-agent"
+  }
+ },
+ {
+  "id": 192,
+  "topic": "plan-and-manage",
+  "type": "mc_multi",
+  "question": "You must evaluate live traffic of a Foundry Agent Service agent as responses complete, by using the Python SDK (azure-ai-projects). Which TWO actions should you perform?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Assign the Foundry User role to the Foundry project's managed identity"
+   },
+   {
+    "id": "B",
+    "text": "Create a Schedule with a RecurrenceTrigger and an EvaluationScheduleTask"
+   },
+   {
+    "id": "C",
+    "text": "Create an EvaluationRule with a ContinuousEvaluationRuleAction and the RESPONSE_COMPLETED event type by calling evaluation_rules.create_or_update"
+   },
+   {
+    "id": "D",
+    "text": "Set OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT to true in the agent's client application"
+   }
+  ],
+  "correct": [
+   "A",
+   "C"
+  ],
+  "explanation": "The Agent Monitoring Dashboard page says that to enable continuous evaluation rules you assign the project managed identity the Foundry User role, and its Python sample creates the continuous evaluation with project_client.evaluation_rules.create_or_update using an EvaluationRule that has a ContinuousEvaluationRuleAction, event_type RESPONSE_COMPLETED and a filter on the agent name. A Schedule with a RecurrenceTrigger creates a scheduled evaluation that runs at fixed times instead of sampling live traffic as it occurs.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Observability - Monitoring",
+   "unit": "Monitor agents with the Agent Monitoring Dashboard",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard"
+  }
+ },
+ {
+  "id": 193,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You are mitigating potential harms in a generative AI solution by following the layered approach in the Microsoft guidance. You use retrieval augmented generation (RAG) to retrieve contextual data from trusted data sources and include it in prompts. At which layer is this mitigation applied?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Model"
+   },
+   {
+    "id": "B",
+    "text": "Safety system"
+   },
+   {
+    "id": "C",
+    "text": "User experience"
+   },
+   {
+    "id": "D",
+    "text": "System message and grounding"
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "explanation": "The Mitigate potential harms unit lists four layers: model, safety system, system message and grounding, and user experience. Using RAG to retrieve contextual data from trusted sources and include it in prompts is listed under the system message and grounding layer. Guardrails with content filters and prompt shields belong to the safety system layer, and selecting or fine-tuning a model belongs to the model layer.",
+  "source": {
+   "path": "Microsoft Learn training module",
+   "module": "Implement a responsible generative AI solution in Microsoft Foundry",
+   "unit": "Mitigate potential harms",
+   "url": "https://learn.microsoft.com/en-us/training/modules/responsible-ai-studio/5-mitigate-harms"
+  }
+ },
+ {
+  "id": 194,
+  "topic": "plan-and-manage",
+  "type": "sequence",
+  "question": "A long-running hosted agent in Foundry Agent Service handles expense claims in a @multi_turn_task chain. A manager must approve each claim before it is submitted, and the wait can last for days. Arrange the stages of the pause-and-resume flow in the correct order.",
+  "items": [
+   {
+    "id": "S3",
+    "text": "A person replies, and your application starts a new turn on the same task_id"
+   },
+   {
+    "id": "S1",
+    "text": "The agent does work until it needs a human decision"
+   },
+   {
+    "id": "S4",
+    "text": "The handler is reentered with ctx.entry_mode equal to \"resumed\" and continues with the human's answer"
+   },
+   {
+    "id": "S2",
+    "text": "The agent returns a turn that asks for the decision, and the chain moves to the suspended state"
+   }
+  ],
+  "correct_order": [
+   "S1",
+   "S2",
+   "S3",
+   "S4"
+  ],
+  "explanation": "The human-in-the-loop page for hosted agents describes the flow: the agent works until it needs a human decision, returns a turn that asks for it (the chain suspends and stays alive under one task_id), a person replies and the app starts a new turn on the same task_id, and the handler resumes with ctx.entry_mode == \"resumed\". Because the chain is durable, the wait can last minutes, hours or days and survives container restarts.",
+  "source": {
+   "path": "Microsoft Foundry documentation",
+   "module": "Foundry Agent Service - Hosted agents",
+   "unit": "Add a human-in-the-loop approval step",
+   "url": "https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/add-human-in-the-loop"
+  }
+ },
+ {
+  "id": 195,
+  "topic": "plan-and-manage",
+  "type": "mc_single",
+  "question": "You build an agent in Python with Microsoft Agent Framework. A function tool that issues refunds must not run until a person has approved the specific call; other function tools can run automatically. How should you declare the refund tool?",
+  "options": [
+   {
+    "id": "A",
+    "text": "Decorate the function with @tool(approval_mode=\"always_require\")"
+   },
+   {
+    "id": "B",
+    "text": "Decorate the function with @tool(require_approval=\"always\")"
+   },
+   {
+    "id": "C",
+    "text": "Wrap the function in ApprovalRequiredAIFunction"
+   },
+   {
+    "id": "D",
+    "text": "Decorate the function with @tool and add \"ask the user before issuing refunds\" to the agent instructions"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "explanation": "The Agent Framework tool approval page says that in Python you indicate that a function requires human approval by setting the approval_mode parameter to \"always_require\" on the @tool decorator; the agent run then returns user_input_requests, and you answer with to_function_approval_response in the same session. ApprovalRequiredAIFunction is the wrapper used in C#, and require_approval is the property of the Foundry MCP tool, not of the @tool decorator.",
+  "source": {
+   "path": "Microsoft Agent Framework documentation",
+   "module": "Agents - Tools",
+   "unit": "Using function tools with human in the loop approvals",
+   "url": "https://learn.microsoft.com/en-us/agent-framework/agents/tools/tool-approval"
+  }
+ }
+]

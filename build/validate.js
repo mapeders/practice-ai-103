@@ -1,9 +1,10 @@
 // Validates one chunk JSON file against the question schema, topic, id range, and the
 // source URL whitelist in build/url-list.json (unit URLs derived from module base + unit slug, plus docs).
-// Usage: node build/validate.js <chunk-file> <topic> <id-min> <id-max>
+// An optional fifth argument names a JSON array of extra allowed URLs, for authoring a chunk before its sources are merged.
+// Usage: node build/validate.js <chunk-file> <topic> <id-min> <id-max> [extra-urls.json]
 const fs = require('fs');
 const path = require('path');
-const [,, chunkPath, topic, idMinStr, idMaxStr] = process.argv;
+const [,, chunkPath, topic, idMinStr, idMaxStr, extraUrlsPath] = process.argv;
 if (!chunkPath || !topic || !idMinStr || !idMaxStr) {
   console.error('Usage: node build/validate.js <chunk-file> <topic> <id-min> <id-max>'); process.exit(2);
 }
@@ -13,6 +14,7 @@ if (!list) { console.error('unknown topic ' + topic); process.exit(2); }
 const allowed = new Set();
 for (const m of list.modules) for (const u of m.units) { allowed.add(m.base + u); allowed.add(m.base + u + '?pivots=text'); }
 for (const d of list.docs) allowed.add(d);
+if (extraUrlsPath) for (const d of JSON.parse(fs.readFileSync(extraUrlsPath, 'utf8'))) allowed.add(d);
 const arr = JSON.parse(fs.readFileSync(chunkPath, 'utf8'));
 if (!Array.isArray(arr)) { console.error('not a JSON array'); process.exit(1); }
 const TYPES = ['mc_single','mc_multi','sequence','hotspot'];
