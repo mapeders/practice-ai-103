@@ -2,6 +2,7 @@
  {
   "id": 166,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "You are adding spoken replies to a customer support agent. A gpt-4o-mini-tts model is deployed in Microsoft Foundry and you connect with the AzureOpenAI client from the OpenAI SDK. The text held in reply_text must be vocalized in a calm, reassuring tone and the audio saved to the path in speech_file_path. Which code should you use?",
   "options": [
@@ -36,6 +37,7 @@
  {
   "id": 167,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_multi",
   "question": "You connected the Azure Speech MCP Server to a Foundry agent. Users interact with the agent only through natural-language prompts in the agent playground. Which three options can users specify in their prompts to customize how the Speech MCP tools transcribe or synthesize speech? (Choose three.)",
   "options": [
@@ -76,6 +78,7 @@
  {
   "id": 168,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "sequence",
   "question": "A meeting assistant must transcribe a long audio file with the Azure Speech SDK for Python. Single-shot recognition is unsuitable because it stops at the first silence or after a maximum of 15 seconds of audio, so you implement continuous recognition. Arrange the steps in the order used in the Azure Speech documentation.",
   "items": [
@@ -118,6 +121,7 @@
  {
   "id": 169,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "An agent's text-to-speech step calls speech_synthesizer.speak_text_async(text).get() with the Azure Speech SDK for Python. In production the result's reason is sometimes not SynthesizingAudioCompleted, and you must log why synthesis failed. What should the code do?",
   "options": [
@@ -152,6 +156,7 @@
  {
   "id": 170,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "You created an agent named Speech-Agent in a Microsoft Foundry project and connected the Azure Speech MCP Server to it. You are now building a Python client application with the azure-ai-projects and azure-identity packages. After creating an AIProjectClient with DefaultAzureCredential and calling get_openai_client(), how should the application send a user prompt such as \"Generate 'Welcome aboard' as speech\" to the agent?",
   "options": [
@@ -186,6 +191,7 @@
  {
   "id": 171,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "hotspot",
   "question": "Instead of adding the Azure Speech MCP Server to an agent in the Foundry portal, you want to define the tool connection in code when you create the agent with the azure-ai-projects SDK. Complete the code.\n\nfrom azure.ai.projects.models import [B1]\n\nmcp_tool = [B1](\n    server_label=\"azure-speech\",\n    server_url=\"https://{foundry-resource-name}.[B2]\",\n    require_approval=\"[B3]\",\n)",
   "blanks": [
@@ -254,6 +260,7 @@
  {
   "id": 172,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_multi",
   "question": "A voice agent frequently mistranscribes a handful of names, such as \"Rehaan\" and \"Contoso\". Before investing in a custom speech model, you evaluate using a phrase list with Azure Speech in Foundry Tools. Which two statements about phrase lists are true? (Choose two.)",
   "options": [
@@ -289,6 +296,7 @@
  {
   "id": 173,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "A Voice Live voice agent uses the gpt-4.1 model. You trained a custom speech model for Chinese (zh-CN) product terminology and deployed it on the same Microsoft Foundry resource that you use to call the Voice Live API. English speech should continue to use the base model. How should you configure the session in the session.update message?",
   "options": [
@@ -323,6 +331,7 @@
  {
   "id": 174,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "An insurance company's call-center agent uses Azure Speech speech to text. The base model already recognizes the company's product vocabulary, but accuracy drops for callers with strong regional accents and for calls with background noise from headsets. You decide to train a custom speech model. Which type of training data addresses this problem?",
   "options": [
@@ -357,6 +366,7 @@
  {
   "id": 175,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_multi",
   "question": "You test a custom speech model in Speech Studio with an audio + human-labeled transcript dataset. The test reports a word error rate (WER) of 32%, and most of the errors are substitutions. Which two conclusions are consistent with Microsoft's guidance? (Choose two.)",
   "options": [
@@ -392,6 +402,7 @@
  {
   "id": 176,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "hotspot",
   "question": "You are sending a recorded call (call.wav) to a gpt-audio-mini deployment so that the model can reason over the spoken audio and answer in text and speech. Complete the Python code.\n\nwith open('call.wav', 'rb') as wav_reader:\n    encoded_string = base64.b64encode(wav_reader.read()).decode('utf-8')\n\ncompletion = client.chat.completions.create(\n    model=\"gpt-audio-mini\",\n    modalities=[\"text\", \"audio\"],\n    audio={\"voice\": \"alloy\", \"format\": \"wav\"},\n    messages=[{\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Describe in detail the spoken audio input.\"},\n            {\"type\": \"[B1]\", \"[B1]\": {\"data\": [B2], \"format\": \"wav\"}}\n        ]\n    }]\n)\n\nprint(completion.choices[0].message.[B3])",
   "blanks": [
@@ -464,6 +475,7 @@
  {
   "id": 177,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "sequence",
   "question": "You are building a multi-turn conversation with a gpt-audio-mini deployment through the chat completions API. The first turn asks the model to describe a recorded audio file and returns a spoken response; the second turn asks a follow-up text question about that response. Arrange the steps in the correct order.",
   "items": [
@@ -506,6 +518,7 @@
  {
   "id": 178,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "An existing application calls the /chat/completions API with the AzureOpenAI client. You must extend it so that a single request can include a recorded customer voice message together with a text prompt, and the model returns both a text answer and a spoken answer. Low-latency real-time streaming is not required, and you want to keep using the chat completions API. Which approach should you use?",
   "options": [
@@ -540,6 +553,7 @@
  {
   "id": 179,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "A Voice Live voice agent uses the gpt-4.1 model. While the agent is speaking, callers often say filler words such as \"umm\" or \"yeah\", and the agent stops talking because it treats them as an interruption. You need turn detection that is based on semantic meaning and that ignores filler words while a response is in progress, but genuine interruptions must still stop the agent. Which turn_detection configuration should you send in session.update?",
   "options": [
@@ -574,6 +588,7 @@
  {
   "id": 180,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "You are choosing a generative AI model for a Voice Live voice agent. You want the caller's audio to be consumed natively by a multimodal model, rather than being converted to text by Azure speech to text before it reaches the model. Which model should you select?",
   "options": [
@@ -608,6 +623,7 @@
  {
   "id": 181,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "A speech-to-speech translation app uses Live Interpreter with the Azure Speech SDK for Python. The SPEECH_ENDPOINT value is wss://<resource-name>.cognitiveservices.azure.com/stt/speech/universal/v2 and the app creates a SpeechTranslationConfig from that endpoint. You want to switch to the large language model (LLM)-based Live Interpreter while keeping the rest of the code unchanged. What should you do?",
   "options": [
@@ -642,6 +658,7 @@
  {
   "id": 182,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "sequence",
   "question": "You are implementing Live Interpreter with the Azure Speech SDK for Python so that speech in any supported language is translated into spoken Chinese without specifying an input language. Arrange the steps in the correct order.",
   "items": [
@@ -684,6 +701,7 @@
  {
   "id": 183,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "A live-captioning app uses a TranslationRecognizer with continuous recognition to translate a presenter's English speech into German. Captions must update with partial translations while the presenter is still speaking, before each utterance is finalized. Which event of the TranslationRecognizer should you handle to get these results?",
   "options": [
@@ -718,6 +736,7 @@
  {
   "id": 184,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "In the recognized callback of a TranslationRecognizer, your code checks evt.result.reason. For some utterances the value is ResultReason.RecognizedSpeech rather than ResultReason.TranslatedSpeech. What does this value indicate?",
   "options": [
@@ -752,6 +771,7 @@
  {
   "id": 185,
   "topic": "text-analysis",
+  "skill": "speech",
   "type": "mc_single",
   "question": "A conference app must take a presenter's spoken English and deliver translations in French and Japanese at the same time, both as text and as synthesized speech. A colleague proposes prompting a general-purpose large language model deployment to do the translation. Based on Microsoft's guidance for translation in Microsoft Foundry, which option should you choose for this requirement?",
   "options": [

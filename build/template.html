@@ -41,6 +41,7 @@
      * Common fields:
      *   id          : sequential int, unique
      *   topic       : one of TOPICS[].id (official AI-103 study-guide skill areas)
+     *   skill       : optional, one of WEAK_SKILLS[].id (score-report weak skill this question drills)
      *   type        : "mc_single" | "mc_multi" | "sequence" | "hotspot"
      *   question    : body text (rendered in <pre>; escaped)
      *   explanation : feedback text (rendered in <pre>; escaped)
@@ -80,6 +81,12 @@
       "text-analysis": 12.5,
       "information-extraction": 12.5,
     };
+    // The three weakest skills named in the 13 November 2026 score report; questions opt in with their `skill` field.
+    const WEAK_SKILLS = [
+      { id: "responsible-ai-genai", title: "Responsible AI across generative AI and agentic systems", short: "GenAI & agents" },
+      { id: "responsible-ai-multimodal", title: "Responsible AI for multimodal content", short: "Multimodal" },
+      { id: "speech", title: "Speech solutions", short: "Speech" },
+    ];
     const STUDY_GUIDE_URL = "https://learn.microsoft.com/en-gb/credentials/certifications/resources/study-guides/ai-103";
     const STORAGE_KEY = "ai103-practice-v1";
     let memoryState = null;
@@ -155,6 +162,8 @@
       catch (e) { memoryState = s; }
     }
     function questionsForTopic(topicId) { return QUESTIONS.filter(q => q.topic === topicId); }
+    /** Questions tagged with a score-report weak skill; all tagged questions when skillId is omitted. */
+    function questionsForSkill(skillId) { return QUESTIONS.filter(q => skillId ? q.skill === skillId : !!q.skill); }
     function statsFor(qs, state) {
       let answered = 0, correct = 0;
       for (const q of qs) {
@@ -240,9 +249,27 @@
           <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Work through every question you have not tried yet</div>
         </button>` : '';
 
-      root.innerHTML = intro + cards + mixedCard + unseenCard + queueCard;
+      const weakAll = statsFor(questionsForSkill(null), state);
+      const weakCard = weakAll.total > 0 ? `
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-lg p-4 mb-3">
+          <div class="font-semibold text-amber-900 dark:text-amber-200">Weak areas only — score-report focus</div>
+          <div class="text-sm text-amber-800 dark:text-amber-300 mt-1">Unanswered and wrong questions come first · ${weakAll.total} questions · ${weakAll.answered} answered · ${weakAll.pct}% correct</div>
+          <button class="weak-btn w-full mt-3 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-semibold" data-mode="weak" data-skill="">All three weak areas (${weakAll.total})</button>
+          <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
+            ${WEAK_SKILLS.map(k => {
+              const s = statsFor(questionsForSkill(k.id), state);
+              return `<button class="weak-btn text-left px-3 py-2 bg-white dark:bg-gray-800 border border-amber-300 dark:border-amber-700 rounded hover:border-amber-600" data-mode="weak" data-skill="${k.id}" title="${escapeHtml(k.title)}" ${s.total === 0 ? 'disabled' : ''}>
+                <div class="text-sm font-semibold">${escapeHtml(k.short)}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400">${s.answered} / ${s.total} answered · ${s.pct}% correct</div>
+              </button>`;
+            }).join('')}
+          </div>
+        </div>` : '';
+
+      root.innerHTML = intro + weakCard + cards + mixedCard + unseenCard + queueCard;
 
       root.querySelectorAll('.topic-card').forEach(el => el.addEventListener('click', () => startTopic(el.dataset.topic)));
+      root.querySelectorAll('.weak-btn').forEach(el => el.addEventListener('click', () => startWeak(el.dataset.skill || null)));
       root.querySelector('[data-mode="mixed"]')?.addEventListener('click', startMixed);
       root.querySelector('[data-mode="unseen"]')?.addEventListener('click', startUnseen);
       root.querySelector('[data-mode="wrong-queue"]')?.addEventListener('click', startWrongQueue);
@@ -280,6 +307,19 @@
       newSession('mixed', null, picked);
     }
 
+    /**
+     * Starts a session over the score-report weak skills (one skill, or all when skillId is null). The queue is
+     * shuffled and then ordered unanswered first, previously wrong second, previously correct last, so a partial
+     * session still spends its time where it helps most.
+     */
+    function startWeak(skillId) {
+      const state = loadState();
+      const rank = id => { const r = state.results[id]; return !r ? 0 : r.correct ? 2 : 1; };
+      const ids = shuffle(questionsForSkill(skillId).map(q => q.id)).sort((a, b) => rank(a) - rank(b));
+      if (ids.length === 0) return;
+      newSession('weak', skillId, ids);
+    }
+
     function startUnseen() {
       const state = loadState();
       const ids = QUESTIONS.filter(q => !state.results[q.id]).map(q => q.id);
@@ -296,6 +336,7 @@
     function commonHeader(q) {
       const typeLabel = { mc_single: 'single choice', mc_multi: 'multiple choice', sequence: 'ordering', hotspot: 'hotspot' }[q.type] || q.type;
       const topic = TOPICS.find(t => t.id === q.topic);
+      const skill = WEAK_SKILLS.find(k => k.id === q.skill);
       return `
         <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
           <button id="btn-back" class="text-msblue">← Back</button>
@@ -304,6 +345,7 @@
         <div class="mb-2 flex flex-wrap gap-1">
           <span class="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700">${typeLabel}</span>
           ${topic ? `<span class="text-xs px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200">${escapeHtml(topic.title)}</span>` : ''}
+          ${skill ? `<span class="text-xs px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-200">weak area: ${escapeHtml(skill.short)}</span>` : ''}
         </div>`;
     }
 
@@ -551,6 +593,7 @@
         ? `Topic complete — ${TOPICS.find(t => t.id === session.topicId)?.title || ''}`
         : session.mode === 'mixed' ? 'Mixed session complete'
         : session.mode === 'unseen' ? 'Unanswered session complete'
+        : session.mode === 'weak' ? `Weak areas complete — ${WEAK_SKILLS.find(k => k.id === session.topicId)?.title || 'all three'}`
         : 'Wrong-queue session complete';
       const passHint = pct >= 70 ? 'At or above the 700/1000 pass line.' : 'Below the 700/1000 pass line — drill the wrong answers.';
       root.innerHTML = `

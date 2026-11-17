@@ -2,6 +2,7 @@
  {
   "id": 186,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You created a custom blocklist of competitor names for an Azure OpenAI model deployment in Microsoft Foundry. You apply it to a content filter with a PUT request to .../raiPolicies/{raiPolicyName}. The documented request body lists the blocklist under \"completionBlocklists\". You need the blocklist to be applied to what users type instead of to what the model generates. What should you change?",
   "options": [
@@ -36,6 +37,7 @@
  {
   "id": 187,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "hotspot",
   "question": "You add a term to an existing custom blocklist for an Azure OpenAI resource by using the Azure Resource Manager REST API. The term must be matched as a regular expression. Complete the request.\n\nPUT https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CognitiveServices/accounts/{accountName}/[B1]/{blocklistName}/raiBlocklistItems/{itemName}?api-version=2024-10-01\n\n{\n  \"properties\": {\n    [B2]: \"proj(ect)?[- ]?falcon\",\n    [B3]: true\n  }\n}",
   "blanks": [
@@ -120,6 +122,7 @@
  {
   "id": 188,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A coding assistant built on a Microsoft Foundry model deployment uses the protected material code filter. A legal reviewer finds that a suggestion that closely matches code from a public GitHub repository created in 2025 was not flagged. What is the documented reason?",
   "options": [
@@ -154,6 +157,7 @@
  {
   "id": 189,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "Your Python application calls a Microsoft Foundry model deployment with client.responses.create(...) from the openai package. The request succeeds, and you need to log the guardrail annotations for the input and output. Where do you read them?",
   "options": [
@@ -188,6 +192,7 @@
  {
   "id": 190,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "You parse the content_filters array returned by the Responses API for a Microsoft Foundry model deployment. For each entry you must determine (1) whether the result applies to the input or to the output, and (2) whether the content was blocked. Which TWO fields should you read?",
   "options": [
@@ -223,6 +228,7 @@
  {
   "id": 191,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You run a local scan with the AI Red Teaming Agent from the Azure AI Evaluation SDK:\n\nred_team_agent = RedTeam(azure_ai_project=azure_ai_project, credential=DefaultAzureCredential())\nresult = await red_team_agent.scan(target=simple_callback)\n\nNo attack_strategies argument is passed. Which prompts are sent to the target?",
   "options": [
@@ -257,6 +263,7 @@
  {
   "id": 192,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "You must evaluate live traffic of a Foundry Agent Service agent as responses complete, by using the Python SDK (azure-ai-projects). Which TWO actions should you perform?",
   "options": [
@@ -292,6 +299,7 @@
  {
   "id": 193,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You are mitigating potential harms in a generative AI solution by following the layered approach in the Microsoft guidance. You use retrieval augmented generation (RAG) to retrieve contextual data from trusted data sources and include it in prompts. At which layer is this mitigation applied?",
   "options": [
@@ -326,6 +334,7 @@
  {
   "id": 194,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "sequence",
   "question": "A long-running hosted agent in Foundry Agent Service handles expense claims in a @multi_turn_task chain. A manager must approve each claim before it is submitted, and the wait can last for days. Arrange the stages of the pause-and-resume flow in the correct order.",
   "items": [
@@ -363,6 +372,7 @@
  {
   "id": 195,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You build an agent in Python with Microsoft Agent Framework. A function tool that issues refunds must not run until a person has approved the specific call; other function tools can run automatically. How should you declare the refund tool?",
   "options": [

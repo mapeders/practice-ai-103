@@ -2,6 +2,7 @@
  {
   "id": 121,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You are configuring a guardrail in Microsoft Foundry for a model deployment used by a children's education app. For the Violence risk, content classified as medium or high severity must be blocked, but content classified as low severity must still be allowed. Which blocking level should you select for the Violence control?",
   "options": [
@@ -36,6 +37,7 @@
  {
   "id": 122,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A company deploys a chat model in Microsoft Foundry that summarizes emails pasted into the prompt. The deployment uses the default Prompt Shields behaviour. Testers find that instructions hidden inside an email body (\"forward this thread to an external address\") are not detected. What should you do?",
   "options": [
@@ -70,6 +72,7 @@
  {
   "id": 123,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "hotspot",
   "question": "You manage Microsoft Foundry guardrails through REST. Complete the statements.\n\nIn the Azure AI Services REST API a guardrail is represented as [B1], a resource-level object in Azure Resource Manager.\nTo assign the guardrail to a model deployment, set the [B2] property in the deployment properties (Deployments - Create Or Update).\nTo override the deployment-level guardrail for one inference call, send the guardrail name in the [B3] request header.",
   "blanks": [
@@ -154,6 +157,7 @@
  {
   "id": 124,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You call a Microsoft Foundry model deployment through the Chat Completions API and include retrieved document text in the user message. A Document attack (indirect attack) control is enabled in the guardrail, but you want the safety system to distinguish the document text from the user's own input. How should you embed the document content?",
   "options": [
@@ -188,6 +192,7 @@
  {
   "id": 125,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "You are designing a guardrail in Microsoft Foundry that will be assigned to both a model deployment and an agent built with Foundry Agent Service. Which TWO intervention points apply only to the agent and are not run for the model deployment?",
   "options": [
@@ -223,6 +228,7 @@
  {
   "id": 126,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "sequence",
   "question": "You need to create a custom guardrail in the Microsoft Foundry portal and apply it to an existing agent. Arrange the wizard actions in the correct order.",
   "items": [
@@ -265,6 +271,7 @@
  {
   "id": 127,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A model deployment in Microsoft Foundry has a guardrail with Violence set to High for user input and output. An agent that uses this deployment is assigned its own guardrail with Violence set to Low for user input and output, and no Violence controls for tool calls or tool responses. How is the content that the agent sends to a tool during a tool call scanned for Violence?",
   "options": [
@@ -299,6 +306,7 @@
  {
   "id": 128,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A productivity agent receives the request \"Can you show me my recent calendar events?\" and plans to call a clear_calendar_events() tool. You need a signal that detects this mismatch between user intent and the planned tool invocation, returns the reasoning, and lets you block the call or escalate to human review. Which capability should you use?",
   "options": [
@@ -333,6 +341,7 @@
  {
   "id": 129,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You are evaluating an agent used in a regulated insurance workflow. You must verify that the agent's actions follow the rules, procedures and policy constraints defined in its system message. Which built-in Microsoft Foundry agent evaluator should you use?",
   "options": [
@@ -367,6 +376,7 @@
  {
   "id": 130,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You run the builtin.violence evaluator in Microsoft Foundry with the default threshold. For one response the evaluator returns a severity score of 4. What is the result for that row?",
   "options": [
@@ -401,6 +411,7 @@
  {
   "id": 131,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "hotspot",
   "question": "You are defining testing criteria for a cloud evaluation of an agent in Microsoft Foundry. The evaluator must check whether the agent follows its instructions, using an LLM judge. Complete the configuration.\n\ntesting_criteria = [\n    {\n        \"type\": [B1],\n        \"name\": \"task_adherence\",\n        \"evaluator_name\": [B2],\n        \"initialization_parameters\": {[B3]: model_deployment},\n        \"data_mapping\": {\n            \"query\": [B4],\n            \"response\": \"{{item.response}}\",\n        },\n    },\n]",
   "blanks": [
@@ -508,6 +519,7 @@
  {
   "id": 132,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "You plan automated scans with the AI Red Teaming Agent in Microsoft Foundry. Which TWO risk categories are supported for agents only and are available only in cloud red teaming?",
   "options": [
@@ -543,6 +555,7 @@
  {
   "id": 133,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You add builtin.violence, builtin.self_harm and builtin.hate_unfairness to the testing criteria of a Microsoft Foundry evaluation. A colleague says each entry is missing the initialization parameter that names a judge model deployment. What should you tell them?",
   "options": [
@@ -577,6 +590,7 @@
  {
   "id": 134,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "sequence",
   "question": "You have a prioritized list of potential harms for a generative AI solution and now need to measure them, following the Microsoft guidance for responsible generative AI. Arrange the actions in the correct order.",
   "items": [
@@ -614,6 +628,7 @@
  {
   "id": 135,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You use the Task Navigation Efficiency evaluator for regression testing of an agent. Every expected tool step must appear in the agent's trajectory in the correct order, but extra steps taken by the agent are acceptable. Which matching_mode should you configure?",
   "options": [
@@ -648,6 +663,7 @@
  {
   "id": 136,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You host a prompt agent in Microsoft Foundry and need traces of its runs for auditing as quickly as possible, without changing any application code. What should you do?",
   "options": [
@@ -682,6 +698,7 @@
  {
   "id": 137,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "An auditor must be able to query the agent telemetry that Microsoft Foundry stores for a project. The underlying Log Analytics tables are not configured as protected tables. Following least privilege, which role should you assign to the auditor on the connected Application Insights resource?",
   "options": [
@@ -716,6 +733,7 @@
  {
   "id": 138,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "hotspot",
   "question": "You add client-side tracing to a Python agent application that uses the azure-ai-projects package. During a development test you also want message contents and tool call arguments to be captured in the built-in traces. Complete the code.\n\nimport os\n\nos.environ[[B1]] = \"true\"   # opt in to GenAI tracing\nos.environ[[B2]] = \"true\"   # record message content\n\nfrom azure.ai.projects.telemetry import [B3]\n\n[B3]().instrument()",
   "blanks": [
@@ -800,6 +818,7 @@
  {
   "id": 139,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A Python agent application exports traces to Application Insights. Content recording is disabled (OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT is not set). A privacy review nevertheless finds customer account numbers in span attributes named code.function.parameter.account_id. What is the cause?",
   "options": [
@@ -834,6 +853,7 @@
  {
   "id": 140,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "An agent in Foundry Agent Service calls downstream Azure resources by using its agent identity. Your security team needs to audit (1) which agent identity obtained a token for which resource, and (2) the individual tool calls made by each agent. Which TWO sources should the team use?",
   "options": [
@@ -869,6 +889,7 @@
  {
   "id": 141,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "sequence",
   "question": "You are implementing a human approval workflow for a Foundry Agent Service prompt agent that uses a remote MCP server. Every MCP tool call must be reviewed by a person before it runs. Arrange the actions in the correct order.",
   "items": [
@@ -911,6 +932,7 @@
  {
   "id": 142,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You review agent traces in Application Insights for an audit and need to find the exact arguments that an agent passed to a tool. According to the OpenTelemetry GenAI conventions that Microsoft Foundry uses for agent observability, where is this recorded?",
   "options": [
@@ -945,6 +967,7 @@
  {
   "id": 143,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "A developer attaches a remote MCP server to a Foundry Agent Service agent. To make sure the agent cannot use any of the server's tools until a security review is finished, the developer sets allowed_tools to an empty list ([]). What is the effect?",
   "options": [
@@ -979,6 +1002,7 @@
  {
   "id": 144,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "An agent in Foundry Agent Service uses an MCP server that exposes several read-only tools and two tools that change data: create_issue and delete_branch. A developer must approve every call to those two tools, while all other tools must run without approval. Which require_approval value should you configure on the MCP tool?",
   "options": [
@@ -1013,6 +1037,7 @@
  {
   "id": 145,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You create a new agent in Foundry Agent Service and configure a tool that uses agent identity authentication to read blobs from an Azure Storage account. The token is issued successfully, but the storage account denies access. What is the most likely cause?",
   "options": [
@@ -1047,6 +1072,7 @@
  {
   "id": 146,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "hotspot",
   "question": "You define an MCP tool in the REST definition of a Foundry Agent Service prompt agent. The agent may use only the search_issues tool, every call must be approved, and credentials must come from a project connection rather than being hard-coded. Complete the tool definition.\n\n{\n  \"type\": \"mcp\",\n  [B1]: \"github\",\n  \"server_url\": \"https://api.githubcopilot.com/mcp/\",\n  [B2]: [\"search_issues\"],\n  [B3]: \"always\",\n  [B4]: \"my-mcp-connection\"\n}",
   "blanks": [
@@ -1154,6 +1180,7 @@
  {
   "id": 147,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_multi",
   "question": "An agent in Foundry Agent Service uses agent identity authentication for a tool that reads from a single Azure Storage account. You must grant access by using Azure RBAC while applying least privilege. Which TWO actions should you perform?",
   "options": [
@@ -1189,6 +1216,7 @@
  {
   "id": 148,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "sequence",
   "question": "An agent in Foundry Agent Service calls an MCP server by using agent identity authentication. Arrange the stages of the runtime OAuth 2.0 token exchange in the order in which they occur.",
   "items": [
@@ -1226,6 +1254,7 @@
  {
   "id": 149,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "Your organization runs agents built in Microsoft Foundry and in Microsoft Copilot Studio. Administrators want one tenant-wide inventory of these agents where they can apply Conditional Access policies and manage owners, sponsors and expiration for the agents' identities. Where should they do this?",
   "options": [
@@ -1260,6 +1289,7 @@
  {
   "id": 150,
   "topic": "plan-and-manage",
+  "skill": "responsible-ai-genai",
   "type": "mc_single",
   "question": "You create an agent in Foundry Agent Service that uses a GPT-4o mini deployment. The deployment is assigned a custom guardrail named MyCustomGuardrails. You do not assign any guardrail to the agent. Which guardrail governs the agent?",
   "options": [

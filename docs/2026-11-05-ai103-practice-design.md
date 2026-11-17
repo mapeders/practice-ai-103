@@ -59,3 +59,10 @@ Learn pages fetched on the day; the new source URLs are in the `docs` arrays of 
 
 `build/validate.js` takes an optional fifth argument, a JSON array of extra allowed URLs, so a chunk can be authored
 before its sources are merged into `url-list.json`.
+
+### Weak areas only mode
+Questions that drill one of the three score-report skills carry an optional `skill` field
+(`responsible-ai-genai`, `responsible-ai-multimodal`, `speech`); `WEAK_SKILLS` in `build/template.html` holds the
+titles and `build/validate.js` rejects unknown values. The home screen shows a "Weak areas only" card with one button
+for all 98 tagged questions and one per skill. A weak-area session is shuffled and then ordered unanswered first,
+previously wrong second, previously correct last. Tagged questions show a "weak area" badge in every mode.

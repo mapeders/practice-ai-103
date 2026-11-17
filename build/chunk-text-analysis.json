@@ -36,6 +36,7 @@
   {
     "id": 42,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "A logistics company uses Azure Speech speech-to-text, but the base model frequently mistranscribes the company's internal product codes and warehouse terminology. Transcription runs in real time in a mobile app. What should you do to improve accuracy, and what is required before the app can use the result?",
     "options": [
@@ -981,6 +982,7 @@
   {
     "id": 64,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "sequence",
     "question": "You are implementing multi-language speech-to-speech translation (English speech into both French and Japanese audio) with the Azure Speech SDK for Python using the manual synthesis approach. Put the steps in the order in which each one depends on the previous.",
     "items": [
@@ -1018,6 +1020,7 @@
   {
     "id": 65,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "You are building a kiosk that translates spoken English into spoken French only, and you want to receive the translated audio as a byte stream directly from the translation operation without a separate synthesizer. How should you configure the Azure Speech SDK?",
     "options": [
@@ -1202,6 +1205,7 @@
   {
     "id": 70,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "sequence",
     "question": "You are transcribing a WAV file with the Azure Speech SDK for Python (azure-cognitiveservices-speech). Arrange the steps of the Speech to text pattern in the correct order.",
     "items": [
@@ -1244,6 +1248,7 @@
   {
     "id": 71,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "Your speech-enabled app calls speech_recognizer.recognize_once_async().get(). The audio was successfully processed, but the result's Reason property is not RecognizedSpeech and no error occurred. Which Reason value indicates that the audio was parsed but no speech was recognized?",
     "options": [
@@ -1278,6 +1283,7 @@
   {
     "id": 72,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "You are building a backend service that synthesizes notifications with the Azure Speech SDK but must not play audio on a speaker or write a file; instead it needs the raw audio stream to forward to a messaging system. How should you configure the SpeechSynthesizer?",
     "options": [
@@ -1312,6 +1318,7 @@
   {
     "id": 73,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "hotspot",
     "question": "You are writing SSML for an Azure Speech synthesis request so that one neural voice speaks cheerfully, the word SQL is pronounced as sequel, and a short pause is inserted. Complete the markup and the SDK call.\n\n<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" xml:lang=\"en-US\">\n  <voice name=\"en-US-AriaNeural\">\n    <[B1] style=\"cheerful\">Welcome back!</[B1]>\n    Open <[B2] alphabet=\"sapi\" ph=\"s iy k w ax l\">SQL</[B2]> Server.\n    <[B3] strength=\"weak\"/>Let's begin.\n  </voice>\n</speak>\n\nresult = speech_synthesizer.[B4](ssml).get()",
     "blanks": [
@@ -1403,6 +1410,7 @@
   {
     "id": 74,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "A telephony integration requires synthesized speech from Azure Speech as 24 kHz, 16-bit mono PCM in a RIFF (WAV) container, spoken by the en-US-Brian:DragonHDLatestNeural voice. Which Python code configures this on an existing speech_config object?",
     "options": [
@@ -1437,6 +1445,7 @@
   {
     "id": 75,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "You want to transcribe a recorded meeting (speech.mp3) using a generative AI speech model deployed in Microsoft Foundry, via the OpenAI Python SDK's AzureOpenAI client. Which model family and method should you use?",
     "options": [
@@ -1471,6 +1480,7 @@
   {
     "id": 76,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_multi",
     "question": "You are connecting the Azure Speech MCP Server to a Foundry agent so it can transcribe audio and generate spoken responses. Which three items are required or recommended by the setup? (Choose three.)",
     "options": [
@@ -1511,6 +1521,7 @@
   {
     "id": 77,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "A developer upgrades a Python app to the latest azure-cognitiveservices-speech package and wants to create the SpeechConfig object using the Foundry resource endpoint instead of a region name. Which statement is correct?",
     "options": [
@@ -1545,6 +1556,7 @@
   {
     "id": 78,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "mc_single",
     "question": "You are building a browser-based voice assistant that connects directly to the Voice Live API over WebSocket and must use keyless Microsoft Entra authentication. Which configuration is correct?",
     "options": [
@@ -1579,6 +1591,7 @@
   {
     "id": 79,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "sequence",
     "question": "You are implementing a Python client for a Voice Live agent using the azure-ai-voicelive async client library and PyAudio. Arrange the runtime flow of the client in the correct order, starting from connection setup and following the first user turn.",
     "items": [
@@ -1621,6 +1634,7 @@
   {
     "id": 80,
     "topic": "text-analysis",
+    "skill": "speech",
     "type": "hotspot",
     "question": "You are creating a Voice Live agent in code with the Foundry SDK for Python and configuring its session for a noisy call-center environment. Complete the configuration.\n\nvoice_live_config = {\n  \"session\": {\n    \"voice\": {\"name\": \"en-US-Ava:DragonHDLatestNeural\", \"type\": \"azure-standard\"},\n    \"turn_detection\": {\"type\": \"[B1]\"},\n    \"input_audio_noise_reduction\": {\"type\": \"[B2]\"},\n    \"input_audio_echo_cancellation\": {\"type\": \"server_echo_cancellation\"}\n  }\n}\n\nagent = project_client.agents.create_version(\n    agent_name=\"AGENT_NAME\",\n    definition=PromptAgentDefinition(model=\"MODEL_DEPLOYMENT_NAME\", instructions=\"...\"),\n    metadata=chunk_config(json.dumps(voice_live_config))   # keys start with \"[B3]\"\n)",
     "blanks": [

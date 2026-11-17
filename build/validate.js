@@ -18,6 +18,8 @@ if (extraUrlsPath) for (const d of JSON.parse(fs.readFileSync(extraUrlsPath, 'ut
 const arr = JSON.parse(fs.readFileSync(chunkPath, 'utf8'));
 if (!Array.isArray(arr)) { console.error('not a JSON array'); process.exit(1); }
 const TYPES = ['mc_single','mc_multi','sequence','hotspot'];
+// Optional per-question tag naming a score-report weak skill; must match WEAK_SKILLS[].id in template.html.
+const SKILLS = ['responsible-ai-genai','responsible-ai-multimodal','speech'];
 const errs = [], seen = new Set(), typeCounts = {mc_single:0,mc_multi:0,sequence:0,hotspot:0};
 const seenQuestions = new Set();
 for (const q of arr) {
@@ -26,6 +28,7 @@ for (const q of arr) {
   else if (q.id < idMin || q.id > idMax) errs.push(`${pre}: id out of range`);
   else if (seen.has(q.id)) errs.push(`${pre}: duplicate id`); else seen.add(q.id);
   if (q.topic !== topic) errs.push(`${pre}: topic ${q.topic} != ${topic}`);
+  if (q.skill !== undefined && !SKILLS.includes(q.skill)) errs.push(`${pre}: bad skill ${q.skill}`);
   if (!TYPES.includes(q.type)) errs.push(`${pre}: bad type ${q.type}`); else typeCounts[q.type]++;
   if (typeof q.question !== 'string' || q.question.trim().length < 40) errs.push(`${pre}: question missing/too short`);
   else { const k = q.question.trim().toLowerCase(); if (seenQuestions.has(k)) errs.push(`${pre}: duplicate question text`); seenQuestions.add(k); }

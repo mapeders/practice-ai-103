@@ -48,6 +48,14 @@ const harness = `
     showView('home'); renderHome();
     const cards = document.querySelectorAll('#view-home .topic-card');
     out.push('home-cards=' + cards.length + ' enabled=' + [...cards].filter(c => !c.disabled).length);
+    for (const btn of [...document.querySelectorAll('#view-home .weak-btn')].map(b => b.dataset.skill)) {
+      showView('home'); renderHome();
+      document.querySelector('#view-home .weak-btn[data-skill="' + btn + '"]').click();
+      const want = QUESTIONS.filter(q => btn ? q.skill === btn : !!q.skill).length;
+      out.push('weak[' + (btn || 'all') + ']=' + session.queue.length + (session.queue.length === want && want > 0 ? '' : ' MISMATCH missing ' + want));
+      if (!document.querySelector('#view-practice').textContent.includes('weak area:')) out.push('weak[' + (btn || 'all') + '] missing skill badge');
+    }
+    showView('home'); renderHome();
     document.querySelector('#view-home [data-mode="mixed"]').click();
     out.push('mixed-queue=' + session.queue.length);
     finishSession();
